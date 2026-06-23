@@ -4,6 +4,8 @@ title: 关于
 permalink: /about/
 ---
 
+<div class="page-content">
+
 # 关于我
 
 你好，我是 **JoffeeGo** 👋
@@ -24,3 +26,5 @@ permalink: /about/
 ---
 
 > Stay hungry, stay foolish.
+
+</div>

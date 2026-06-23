@@ -4,6 +4,8 @@
   {% include head.html %}
 </head>
 <body>
+  <div id="progress-bar"></div>
+
   {% include header.html %}
 
   <main class="main">
@@ -16,9 +18,8 @@
           </time>
           {% if page.categories %}
           <span class="post-categories">
-            ·
             {% for cat in page.categories %}
-            <a href="/categories/{{ cat | slugify }}/">{{ cat }}</a>
+            <a class="category-tag" href="{{ '/categories/' | relative_url }}#{{ cat | slugify }}">{{ cat }}</a>
             {% endfor %}
           </span>
           {% endif %}
@@ -32,13 +33,15 @@
 
     <nav class="post-nav">
       {% if page.previous.url %}
-      <a class="prev" href="{{ page.previous.url }}">&larr; {{ page.previous.title }}</a>
+      <a class="prev" href="{{ page.previous.url | relative_url }}">&larr; {{ page.previous.title }}</a>
       {% endif %}
       {% if page.next.url %}
-      <a class="next" href="{{ page.next.url }}">{{ page.next.title }} &rarr;</a>
+      <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
       {% endif %}
     </nav>
   </main>
+
+  <button id="back-to-top" title="回到顶部" aria-label="回到顶部">&uarr;</button>
 
   {% include footer.html %}
 </body>

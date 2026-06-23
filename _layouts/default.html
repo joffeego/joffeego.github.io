@@ -4,11 +4,15 @@
   {% include head.html %}
 </head>
 <body>
+  <div id="progress-bar"></div>
+
   {% include header.html %}
 
   <main class="main">
     {{ content }}
   </main>
+
+  <button id="back-to-top" title="回到顶部" aria-label="回到顶部">&uarr;</button>
 
   {% include footer.html %}
 </body>

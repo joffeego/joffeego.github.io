@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 首页
+title: 文章
 ---
 
 <div class="home">
@@ -20,15 +20,14 @@ title: 首页
         </time>
         {% if post.categories %}
         <span class="post-categories">
-          ·
           {% for cat in post.categories %}
-          <span class="category-tag">{{ cat }}</span>
+          <a class="category-tag" href="{{ '/categories/' | relative_url }}#{{ cat | slugify }}">{{ cat }}</a>
           {% endfor %}
         </span>
         {% endif %}
       </div>
       {% if post.excerpt %}
-      <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</p>
+      <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>
       {% endif %}
     </li>
     {% endfor %}
