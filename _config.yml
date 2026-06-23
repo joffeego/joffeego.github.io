@@ -1,0 +1,62 @@
+# ============================================
+# joffeego.github.io — Jekyll 博客配置
+# ============================================
+
+title: JoffeeGo 的博客
+tagline: 技术 · 生活 · 思考
+description: >-
+  欢迎来到我的个人博客。这里记录技术学习、生活感悟和一切有趣的事。
+url: "https://joffeego.github.io"
+baseurl: ""
+author:
+  name: JoffeeGo
+  email: ""
+language: zh-CN
+timezone: Asia/Shanghai
+
+# 分页
+paginate: 8
+paginate_path: "/page/:num/"
+
+# 构建配置
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+    span:
+      line_numbers: false
+    block:
+      line_numbers: false
+
+# 永久链接
+permalink: /:year/:month/:title/
+
+# 默认 Front Matter
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: default
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
+  - vendor/
+
+# GitHub Pages 插件
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-feed

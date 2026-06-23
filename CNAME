@@ -1,0 +1,5 @@
+# 如果你有自己的域名，把下面一行改成你的域名，去掉前面的 #
+# joffeego.github.io
+
+# 然后去 GitHub 仓库 Settings → Pages → Custom domain 填入你的域名
+# 再到 Cloudflare 添加 CNAME 记录指向 joffeego.github.io
