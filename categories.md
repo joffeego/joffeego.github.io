@@ -18,6 +18,7 @@ permalink: /categories/
 {% endfor %}
 {% assign unique_categories = all_categories | uniq | sort %}
 
+{% if unique_categories.size > 0 %}
 <div class="categories-list">
   {% for cat in unique_categories %}
   <a class="category-tag" href="#{{ cat | slugify }}">{{ cat }}</a>
@@ -25,8 +26,14 @@ permalink: /categories/
 </div>
 
 {% for cat in unique_categories %}
+{% assign cat_count = 0 %}
+{% for post in site.posts %}
+  {% if post.categories contains cat %}
+    {% assign cat_count = cat_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
 <div class="category-section" id="{{ cat | slugify }}">
-  <h2>{{ cat }}</h2>
+  <h2>{{ cat }} <span class="count">{{ cat_count }} 篇</span></h2>
   <ul>
     {% for post in site.posts %}
       {% if post.categories contains cat %}
@@ -39,3 +46,6 @@ permalink: /categories/
   </ul>
 </div>
 {% endfor %}
+{% else %}
+<div class="empty-state"><p>暂无文章分类。</p></div>
+{% endif %}
