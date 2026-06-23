@@ -10,10 +10,27 @@
     {% include sidebar.html %}
 
     <div class="main-content">
-      {{ content }}
+      <main class="main-inner">
+        {{ content }}
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <span class="footer-copy">&copy; {{ site.time | date: '%Y' }} {{ site.author.name }}</span>
+          <span class="footer-built">
+            Built with <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> · Hosted on <a href="https://pages.github.com" target="_blank" rel="noopener">GitHub Pages</a>
+          </span>
+        </div>
+      </footer>
     </div>
   </div>
 
-  <button id="back-to-top" title="回到顶部" aria-label="回到顶部">&uarr;</button>
+  <button id="back-to-top" title="回到顶部" aria-label="回到顶部" class="back-to-top">
+    <svg class="progress-ring" width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+      <circle class="progress-ring-track" cx="22" cy="22" r="19" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle class="progress-ring-fill"  cx="22" cy="22" r="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="back-to-top-arrow" aria-hidden="true">&uarr;</span>
+  </button>
 </body>
 </html>

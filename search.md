@@ -5,7 +5,9 @@ permalink: /search/
 ---
 
 <div class="page-header">
+  <span class="page-eyebrow">Search</span>
   <h1 class="page-heading">搜索</h1>
+  <p class="page-subtitle">输入关键词，瞬间定位文章</p>
 </div>
 
 <div class="search-container">

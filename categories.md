@@ -5,7 +5,9 @@ permalink: /categories/
 ---
 
 <div class="page-header">
+  <span class="page-eyebrow">Topics</span>
   <h1 class="page-heading">分类</h1>
+  <p class="page-subtitle">按主题浏览所有文章</p>
 </div>
 
 {% assign all_categories = "" | split: "" %}

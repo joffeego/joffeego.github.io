@@ -5,7 +5,9 @@ permalink: /about/
 ---
 
 <div class="page-header">
+  <span class="page-eyebrow">About</span>
   <h1 class="page-heading">关于</h1>
+  <p class="page-subtitle">关于我和这个博客</p>
 </div>
 
 <div class="page-content">

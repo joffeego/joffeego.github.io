@@ -61,22 +61,10 @@
     if (!getStoredTheme()) updateThemeIcon(null);
   });
 
-  // ---- 阅读进度条 ---- //
-  const progressBar = document.getElementById('progress-bar');
-  if (progressBar) {
-    function updateProgress() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight <= 0) return;
-      const pct = Math.min((scrollTop / docHeight) * 100, 100);
-      progressBar.style.width = pct + '%';
-    }
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
-  }
-
-  // ---- 回到顶部 ---- //
+  // ---- 阅读进度条 + 回到顶部进度环 ---- //
   const backBtn = document.getElementById('back-to-top');
+  const ringFill = backBtn ? backBtn.querySelector('.progress-ring-fill') : null;
+  const RING_CIRC = 119.4;
   if (backBtn) {
     function toggleBackBtn() {
       backBtn.classList.toggle('visible', window.scrollY > 400);
@@ -88,6 +76,39 @@
     toggleBackBtn();
   }
 
+  const progressBar = document.getElementById('progress-bar');
+  function updateProgressAll() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    let pct = 0;
+    if (docHeight > 0) pct = Math.min((scrollTop / docHeight) * 100, 100);
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (ringFill) ringFill.style.strokeDashoffset = RING_CIRC - (RING_CIRC * pct / 100);
+  }
+  if (progressBar || ringFill) {
+    window.addEventListener('scroll', updateProgressAll, { passive: true });
+    updateProgressAll();
+  }
+
+  // ---- 入场动画 ---- //
+  function initReveal() {
+    const items = document.querySelectorAll('.reveal:not(.is-visible)');
+    if (!('IntersectionObserver' in window) || !items.length) {
+      items.forEach(function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry, i) {
+        if (entry.isIntersecting) {
+          setTimeout(function () { entry.target.classList.add('is-visible'); }, i * 60);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  }
+  initReveal();
+
   // ---- 代码复制 ---- //
   function initCodeCopy() {
     const pres = document.querySelectorAll('.post-content pre');
@@ -97,6 +118,25 @@
       wrapper.className = 'code-block-wrapper';
       pre.parentNode.insertBefore(wrapper, pre);
       wrapper.appendChild(pre);
+
+      // 语言标签：从 highlighter 包裹的 class="highlight language-xxx" 或 code 的 class 中取
+      let lang = '';
+      const langMatch = pre.className.match(/language-(\w+)/) ||
+                        (pre.querySelector('code') && pre.querySelector('code').className.match(/language-(\w+)/));
+      if (langMatch) lang = langMatch[1];
+      if (!lang) {
+        const hl = pre.closest('.highlight');
+        if (hl) {
+          const m = hl.className.match(/language-(\w+)/);
+          if (m) lang = m[1];
+        }
+      }
+      if (lang) {
+        const label = document.createElement('span');
+        label.className = 'code-lang';
+        label.textContent = lang;
+        wrapper.appendChild(label);
+      }
 
       const btn = document.createElement('button');
       btn.className = 'copy-btn';
@@ -200,7 +240,7 @@
       var escaped = escapeHtml(text);
       if (!query) return escaped;
       var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-      return escaped.replace(regex, '<mark style="background:var(--accent-light);color:var(--accent);padding:0.1em 0.2em;border-radius:2px;">$1</mark>');
+      return escaped.replace(regex, '<mark style="background:var(--accent-soft);color:var(--accent);padding:0.05em 0.25em;border-radius:3px;font-weight:600;">$1</mark>');
     }
   }
 
