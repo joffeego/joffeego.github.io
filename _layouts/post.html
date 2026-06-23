@@ -6,43 +6,43 @@
 <body>
   <div id="progress-bar"></div>
 
-  {% include header.html %}
+  <div class="layout">
+    {% include sidebar.html %}
 
-  <main class="main">
-    <article class="post">
-      <header class="post-header">
-        <h1 class="post-title">{{ page.title }}</h1>
-        <div class="post-meta">
-          <time datetime="{{ page.date | date_to_xmlschema }}">
-            {{ page.date | date: "%Y 年 %m 月 %d 日" }}
-          </time>
-          {% if page.categories %}
-          <span class="post-categories">
-            {% for cat in page.categories %}
-            <a class="category-tag" href="{{ '/categories/' | relative_url }}#{{ cat | slugify }}">{{ cat }}</a>
-            {% endfor %}
-          </span>
-          {% endif %}
+    <div class="main-content">
+      <article class="post">
+        <header class="post-header">
+          <h1 class="post-title">{{ page.title }}</h1>
+          <div class="post-meta">
+            <time datetime="{{ page.date | date_to_xmlschema }}">
+              {{ page.date | date: "%Y 年 %m 月 %d 日" }}
+            </time>
+            {% if page.categories %}
+            <span class="post-categories">
+              {% for cat in page.categories %}
+              <a class="category-tag" href="{{ '/categories/' | relative_url }}#{{ cat | slugify }}">{{ cat }}</a>
+              {% endfor %}
+            </span>
+            {% endif %}
+          </div>
+        </header>
+
+        <div class="post-content">
+          {{ content }}
         </div>
-      </header>
+      </article>
 
-      <div class="post-content">
-        {{ content }}
-      </div>
-    </article>
-
-    <nav class="post-nav">
-      {% if page.previous.url %}
-      <a class="prev" href="{{ page.previous.url | relative_url }}">&larr; {{ page.previous.title }}</a>
-      {% endif %}
-      {% if page.next.url %}
-      <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
-      {% endif %}
-    </nav>
-  </main>
+      <nav class="post-nav">
+        {% if page.previous.url %}
+        <a class="prev" href="{{ page.previous.url | relative_url }}">&larr; {{ page.previous.title }}</a>
+        {% endif %}
+        {% if page.next.url %}
+        <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
 
   <button id="back-to-top" title="回到顶部" aria-label="回到顶部">&uarr;</button>
-
-  {% include footer.html %}
 </body>
 </html>

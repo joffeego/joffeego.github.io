@@ -1,0 +1,31 @@
+{% assign current_url = page.url | relative_url %}
+
+<aside class="sidebar">
+  <a href="{{ '/' | relative_url }}" style="text-decoration:none;">
+    <div class="sidebar-avatar">{{ site.author.name | slice: 0 | upcase }}</div>
+  </a>
+  <div class="sidebar-name">{{ site.author.name }}</div>
+  <p class="sidebar-bio">{{ site.description | truncate: 50 }}</p>
+
+  <nav class="sidebar-nav">
+    <a href="{{ '/' | relative_url }}" {% if current_url == '/' %}class="active"{% endif %}>
+      <span class="nav-icon">🏠</span> 文章
+    </a>
+    <a href="{{ '/categories/' | relative_url }}" {% if current_url contains '/categories/' %}class="active"{% endif %}>
+      <span class="nav-icon">📂</span> 分类
+    </a>
+    <a href="{{ '/search/' | relative_url }}" {% if current_url contains '/search/' %}class="active"{% endif %}>
+      <span class="nav-icon">🔍</span> 搜索
+    </a>
+    <a href="{{ '/about/' | relative_url }}" {% if current_url contains '/about/' %}class="active"{% endif %}>
+      <span class="nav-icon">👤</span> 关于
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="{{ '/feed.xml' | relative_url }}" title="RSS">RSS</a>
+    <button id="theme-toggle" class="theme-toggle-sidebar" title="切换暗色模式" aria-label="切换暗色模式">
+      <span id="theme-icon">☀️</span>
+    </button>
+  </div>
+</aside>

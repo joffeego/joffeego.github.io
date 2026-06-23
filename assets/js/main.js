@@ -6,37 +6,49 @@
 (function () {
   'use strict';
 
-  // ---- 主题切换（暗色玻璃 ↔ 亮色玻璃） ---- //
-  const THEME_KEY = 'glass-theme';
+  // ---- 暗色模式切换 ---- //
+  const THEME_KEY = 'theme';
   const themeToggle = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
 
   function getStoredTheme() {
-    return localStorage.getItem(THEME_KEY); // 'light' | null (null = dark default)
+    return localStorage.getItem(THEME_KEY);
   }
 
-  function applyTheme(mode) {
-    if (mode === 'light') {
-      document.documentElement.classList.add('light');
-    } else {
+  function applyTheme(m) {
+    if (m === 'dark') {
+      document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light');
+    } else if (m === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.remove('dark', 'light');
     }
   }
 
-  function updateThemeIcon(mode) {
+  function updateThemeIcon(m) {
     if (!themeIcon) return;
-    themeIcon.textContent = mode === 'light' ? '☀️' : '🌙';
+    let eff = m;
+    if (!eff) eff = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    themeIcon.textContent = eff === 'dark' ? '☀️' : '🌙';
   }
 
   function toggleTheme() {
-    const current = getStoredTheme();
-    const next = current === 'light' ? null : 'light';
+    const cur = getStoredTheme();
+    let next;
+    if (!cur) {
+      next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+    } else if (cur === 'dark') {
+      next = 'light';
+    } else {
+      next = null;
+    }
     localStorage.setItem(THEME_KEY, next || '');
     applyTheme(next);
     updateThemeIcon(next);
   }
 
-  // Init
   const stored = getStoredTheme();
   applyTheme(stored);
   updateThemeIcon(stored);
@@ -44,6 +56,10 @@
   if (themeToggle) {
     themeToggle.addEventListener('click', toggleTheme);
   }
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+    if (!getStoredTheme()) updateThemeIcon(null);
+  });
 
   // ---- 阅读进度条 ---- //
   const progressBar = document.getElementById('progress-bar');

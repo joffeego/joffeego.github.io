@@ -4,6 +4,10 @@ title: 关于
 permalink: /about/
 ---
 
+<div class="page-header">
+  <h1 class="page-heading">关于</h1>
+</div>
+
 <div class="page-content">
 
 # 关于我

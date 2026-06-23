@@ -4,6 +4,10 @@ title: 分类
 permalink: /categories/
 ---
 
+<div class="page-header">
+  <h1 class="page-heading">分类</h1>
+</div>
+
 {% assign all_categories = "" | split: "" %}
 {% for post in site.posts %}
   {% for cat in post.categories %}

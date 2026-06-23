@@ -4,6 +4,10 @@ title: 搜索
 permalink: /search/
 ---
 
+<div class="page-header">
+  <h1 class="page-heading">搜索</h1>
+</div>
+
 <div class="search-container">
   <div class="search-input-wrapper">
     <span class="search-icon">🔍</span>

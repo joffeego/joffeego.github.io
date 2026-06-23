@@ -6,6 +6,8 @@
 <title>
   {% if page.title and page.layout != 'default' %}
     {{ page.title }} — {{ site.title }}
+  {% elsif page.title == '文章' %}
+    {{ site.title }}
   {% elsif page.title %}
     {{ page.title }} — {{ site.title }}
   {% else %}

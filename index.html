@@ -5,7 +5,10 @@ title: 文章
 
 <div class="home">
   {% if site.posts.size > 0 %}
-  <h2 class="post-list-heading">最新文章</h2>
+  <div class="page-header">
+    <h2 class="page-heading">最新文章</h2>
+    <p class="page-subtitle">共 {{ site.posts.size }} 篇</p>
+  </div>
   <ul class="post-list">
     {% for post in site.posts %}
     <li class="post-item">

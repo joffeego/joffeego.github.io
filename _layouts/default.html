@@ -6,14 +6,14 @@
 <body>
   <div id="progress-bar"></div>
 
-  {% include header.html %}
+  <div class="layout">
+    {% include sidebar.html %}
 
-  <main class="main">
-    {{ content }}
-  </main>
+    <div class="main-content">
+      {{ content }}
+    </div>
+  </div>
 
   <button id="back-to-top" title="回到顶部" aria-label="回到顶部">&uarr;</button>
-
-  {% include footer.html %}
 </body>
 </html>
