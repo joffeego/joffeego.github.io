@@ -6,31 +6,31 @@
 (function () {
   'use strict';
 
-  // ---- 配色切换（绿色 ↔ 琥珀色） ---- //
-  const THEME_KEY = 'term-color';
+  // ---- 主题切换（暗色玻璃 ↔ 亮色玻璃） ---- //
+  const THEME_KEY = 'glass-theme';
   const themeToggle = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
 
   function getStoredTheme() {
-    return localStorage.getItem(THEME_KEY); // 'amber' | null (null = green default)
+    return localStorage.getItem(THEME_KEY); // 'light' | null (null = dark default)
   }
 
   function applyTheme(mode) {
-    if (mode === 'amber') {
-      document.documentElement.classList.add('amber');
+    if (mode === 'light') {
+      document.documentElement.classList.add('light');
     } else {
-      document.documentElement.classList.remove('amber');
+      document.documentElement.classList.remove('light');
     }
   }
 
   function updateThemeIcon(mode) {
     if (!themeIcon) return;
-    themeIcon.textContent = mode === 'amber' ? '🟢' : '🟠';
+    themeIcon.textContent = mode === 'light' ? '☀️' : '🌙';
   }
 
   function toggleTheme() {
     const current = getStoredTheme();
-    const next = current === 'amber' ? null : 'amber';
+    const next = current === 'light' ? null : 'light';
     localStorage.setItem(THEME_KEY, next || '');
     applyTheme(next);
     updateThemeIcon(next);
