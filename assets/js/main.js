@@ -6,49 +6,31 @@
 (function () {
   'use strict';
 
-  // ---- 暗色模式 ---- //
-  const THEME_KEY = 'theme';
+  // ---- 配色切换（绿色 ↔ 琥珀色） ---- //
+  const THEME_KEY = 'term-color';
   const themeToggle = document.getElementById('theme-toggle');
   const themeIcon = document.getElementById('theme-icon');
 
   function getStoredTheme() {
-    return localStorage.getItem(THEME_KEY); // 'dark' | 'light' | null
+    return localStorage.getItem(THEME_KEY); // 'amber' | null (null = green default)
   }
 
   function applyTheme(mode) {
-    // mode: 'dark' | 'light' | null (null = auto, follow OS)
-    if (mode === 'dark') {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-    } else if (mode === 'light') {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
+    if (mode === 'amber') {
+      document.documentElement.classList.add('amber');
     } else {
-      document.documentElement.classList.remove('dark', 'light');
+      document.documentElement.classList.remove('amber');
     }
   }
 
   function updateThemeIcon(mode) {
     if (!themeIcon) return;
-    // Figure out effective mode
-    let effective = mode;
-    if (!effective) {
-      effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    themeIcon.textContent = effective === 'dark' ? '☀️' : '🌙';
+    themeIcon.textContent = mode === 'amber' ? '🟢' : '🟠';
   }
 
   function toggleTheme() {
     const current = getStoredTheme();
-    let next;
-    if (!current) {
-      // go from auto → explicit, opposite of current OS preference
-      next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
-    } else if (current === 'dark') {
-      next = 'light';
-    } else {
-      next = null; // back to auto
-    }
+    const next = current === 'amber' ? null : 'amber';
     localStorage.setItem(THEME_KEY, next || '');
     applyTheme(next);
     updateThemeIcon(next);
@@ -62,13 +44,6 @@
   if (themeToggle) {
     themeToggle.addEventListener('click', toggleTheme);
   }
-
-  // Listen for OS changes (only matters in auto mode)
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
-    if (!getStoredTheme()) {
-      updateThemeIcon(null);
-    }
-  });
 
   // ---- 阅读进度条 ---- //
   const progressBar = document.getElementById('progress-bar');
