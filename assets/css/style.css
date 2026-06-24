@@ -201,25 +201,6 @@ body {
 }
 .nav-btn svg { display: block; }
 
-/* in-nav search button (icon + 文字 in nav-link slot) */
-.nav-search-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  height: 100%;
-  padding: 0 0.78rem;
-  cursor: pointer;
-  font-family: inherit;
-  background: none;
-  border: none;
-  border-radius: 8px;
-  line-height: 1;
-}
-.nav-search-btn .nav-search-label { font-size: 0.93rem; font-weight: 500; }
-.nav-search-btn .nav-search-icon { opacity: 0.55; transition: transform var(--t), opacity var(--t); }
-.nav-search-btn:hover { color: var(--ink); }
-.nav-search-btn:hover .nav-search-icon { opacity: 0.9; transform: scale(1.08); }
-
 /* ====================
    SEARCH OVERLAY (liquid expand)
    ==================== */
@@ -375,10 +356,6 @@ body {
   .search-overlay { padding-top: 7vh; }
   .search-close { top: 1.2rem; right: 1.2rem; width: 36px; height: 36px; }
   .site-nav { gap: 0.05rem; }
-  .nav-search-btn { padding: 0 0.6rem; }
-}
-@media (max-width: 480px) {
-  .nav-search-btn .nav-search-icon { display: none; }
 }
 
 /* ====================
