@@ -3,7 +3,7 @@
     <span>&copy; {{ site.time | date: '%Y' }} {{ site.author.name }}</span>
     <div class="footer-social">
       <a href="{{ '/feed.xml' | relative_url }}" title="RSS">RSS</a>
-      <a href="{{ '/search/' | relative_url }}" title="搜索">搜索</a>
+      <button type="button" data-search-trigger title="搜索" style="background:none;border:none;cursor:pointer;font:inherit;color:inherit;">搜索</button>
       {% if site.author.email %}
       <a href="mailto:{{ site.author.email }}" title="Email">Email</a>
       {% endif %}
