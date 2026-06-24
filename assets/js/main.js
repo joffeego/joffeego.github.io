@@ -10,8 +10,6 @@
      1) 阅读进度条 + 回到顶部进度环
      ========================================== */
   var backBtn = document.getElementById('back-to-top');
-  var ringFill = backBtn ? backBtn.querySelector('.progress-ring-fill') : null;
-  var RING_CIRC = 113.1;
   if (backBtn) {
     function toggleBackBtn() {
       backBtn.classList.toggle('visible', window.scrollY > 400);
@@ -30,9 +28,8 @@
     var pct = 0;
     if (docHeight > 0) pct = Math.min((scrollTop / docHeight) * 100, 100);
     if (progressBar) progressBar.style.width = pct + '%';
-    if (ringFill) ringFill.style.strokeDashoffset = RING_CIRC - (RING_CIRC * pct / 100);
   }
-  if (progressBar || ringFill) {
+  if (progressBar) {
     window.addEventListener('scroll', updateProgressAll, { passive: true });
     updateProgressAll();
   }
