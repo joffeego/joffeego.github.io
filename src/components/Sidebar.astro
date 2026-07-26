@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+---
+
+<aside class="sidebar">
+  <div class="profile">
+    <a href="/about/" class="avatar-link">
+      <img class="avatar" src="/images/avatar.svg" alt="JoffeeGo 的头像" width="120" height="120" />
+    </a>
+    <p class="profile-bio">技术 · 生活 · 思考</p>
+  </div>
+
+  <div class="social-links">
+    <a href="https://github.com/joffeego" aria-label="GitHub" title="GitHub">
+      <Icon name="github" size={18} />
+    </a>
+    <a href="/rss.xml" aria-label="RSS 订阅" title="RSS 订阅">
+      <Icon name="rss" size={18} />
+    </a>
+  </div>
+
+  <slot />
+</aside>

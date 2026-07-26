@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+const counts = new Map<string, number>();
+for (const post of posts) {
+  for (const t of post.data.tags) {
+    counts.set(t, (counts.get(t) ?? 0) + 1);
+  }
+}
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+const max = Math.max(1, ...tags.map(([, c]) => c));
+---
+
+<Base title="标签">
+  <div class="page-header">
+    <h1>标签</h1>
+    <p class="page-desc">目前共计 {tags.length} 个标签。</p>
+  </div>
+
+  <div class="tag-cloud">
+    {
+      tags.map(([name, count]) => (
+        <a
+          href={`/tags/${encodeURIComponent(name)}/`}
+          style={`font-size: ${0.85 + (count / max) * 0.6}rem`}
+        >
+          {name}
+          <sup>{count}</sup>
+        </a>
+      ))
+    }
+  </div>
+</Base>

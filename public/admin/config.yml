@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: joffeego/joffeego.github.io
+  branch: main
+
+site_url: https://joffee.eu.org
+logo_url: /images/avatar.svg
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: blog
+    label: 博客文章
+    label_singular: 文章
+    folder: src/content/blog
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    extension: md
+    format: yaml-frontmatter
+    fields:
+      - label: 标题
+        name: title
+        widget: string
+      - label: 发布日期
+        name: date
+        widget: datetime
+        type: date
+      - label: 摘要
+        name: description
+        widget: string
+        required: false
+        hint: 留空则自动截取正文开头作为摘要
+      - label: 分类
+        name: categories
+        widget: list
+        required: false
+      - label: 标签
+        name: tags
+        widget: list
+        required: false
+      - label: 草稿
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+        hint: 勾选后文章不会发布到线上
+      - label: 正文
+        name: body
+        widget: markdown

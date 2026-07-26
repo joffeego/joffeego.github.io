@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <style>
+      .bg { fill: #b3412a; }
+      .fg { fill: #faf9f6; }
+      @media (prefers-color-scheme: dark) {
+        .bg { fill: #d97a5f; }
+        .fg { fill: #1a1817; }
+      }
+    </style>
+  </defs>
+  <rect class="bg" width="128" height="128" rx="24"/>
+  <text class="fg" x="50%" y="54%" dominant-baseline="central" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-size="64" font-weight="700">J</text>
+</svg>

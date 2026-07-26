@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import Sidebar from '../components/Sidebar.astro';
+import Icon from '../components/Icon.astro';
 
 interface Props {
   title?: string;
@@ -7,8 +9,17 @@ interface Props {
 }
 
 const { title, description = '技术 · 生活 · 思考' } = Astro.props;
-const pageTitle = title ? `${title} · JoffeeGo` : 'JoffeeGo 的博客';
+const pageTitle = title ? `${title} · JoffeeGo` : "JoffeeGo's Blog";
 const year = new Date().getFullYear();
+
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/', label: '首页', icon: 'home', match: (p: string) => p === '/' || p.startsWith('/blog/') },
+  { href: '/categories/', label: '分类', icon: 'folder', match: (p: string) => p.startsWith('/categories/') },
+  { href: '/archives/', label: '归档', icon: 'archive', match: (p: string) => p.startsWith('/archives/') },
+  { href: '/tags/', label: '标签', icon: 'tag', match: (p: string) => p.startsWith('/tags/') },
+  { href: '/about/', label: '关于', icon: 'user', match: (p: string) => p.startsWith('/about/') },
+] as const;
 ---
 
 <!doctype html>
@@ -18,28 +29,55 @@ const year = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title="JoffeeGo 的博客" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="JoffeeGo's Blog" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <title>{pageTitle}</title>
   </head>
   <body>
+    <div class="headband"></div>
+
     <header class="site-header">
-      <a class="site-name" href="/">JoffeeGo</a>
-      <nav>
-        <a href="/">文章</a>
-        <a href="/about/">关于</a>
-        <a href="/rss.xml">RSS</a>
+      <div class="site-brand">
+        <a href="/" class="brand">
+          <span class="logo-line" aria-hidden="true"></span>
+          <span class="site-title">JoffeeGo's Blog</span>
+          <span class="logo-line" aria-hidden="true"></span>
+        </a>
+      </div>
+      <nav class="site-nav">
+        {
+          nav.map((item) => (
+            <a href={item.href} class:list={['nav-link', { active: item.match(path) }]}>
+              <Icon name={item.icon} size={13} />
+              <span>{item.label}</span>
+            </a>
+          ))
+        }
       </nav>
     </header>
 
-    <main>
-      <slot />
-    </main>
+    <div class="layout">
+      <Sidebar>
+        <slot name="sidebar" />
+      </Sidebar>
+
+      <main class="content">
+        <slot />
+      </main>
+    </div>
 
     <footer class="site-footer">
-      <span>© {year} JoffeeGo</span>
-      <span class="footer-dot">·</span>
-      <a href="https://github.com/joffeego">GitHub</a>
+      <p>© {year} JoffeeGo · 与你一起发现更大的世界</p>
+      <p class="footer-sub">
+        由 <a href="https://astro.build">Astro</a> 强力驱动 ·
+        <a href="/rss.xml">RSS 订阅</a>
+      </p>
     </footer>
   </body>
 </html>

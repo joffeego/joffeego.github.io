@@ -1,31 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
-
-const formatDate = (d: Date) => d.toISOString().slice(0, 10);
 ---
 
 <Base>
-  <section class="intro">
-    <p>技术 · 生活 · 思考。安安静静坐下来写字的地方。</p>
-  </section>
-
   {
     posts.length === 0 ? (
       <p class="empty">还没有文章，第一篇正在路上。</p>
     ) : (
-      <ul class="post-list">
+      <section class="post-stream">
         {posts.map((post) => (
-          <li>
-            <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-          </li>
+          <PostCard post={post} />
         ))}
-      </ul>
+      </section>
     )
   }
 </Base>
