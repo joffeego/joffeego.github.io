@@ -1,9 +1,12 @@
 ---
-title: "重新开始"
+title: 重新开始
 date: 2026-07-26
-description: "博客推倒重做后的第一篇。"
-categories: [随笔]
-tags: [博客, 随想]
+description: 博客推倒重做后的第一篇。
+categories:
+  - 随笔
+tags:
+  - 博客
+  - 随想
 ---
 
 博客推倒了，重做。
