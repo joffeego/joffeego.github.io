@@ -21,11 +21,19 @@ import Icon from './Icon.astro';
     if (target && !reduced && text) {
       target.textContent = '';
       let i = 0;
-      const timer = window.setInterval(() => {
+
+      const tick = () => {
         i += 1;
         target.textContent = text.slice(0, i);
-        if (i >= text.length) window.clearInterval(timer);
-      }, 120);
+        if (i < text.length) {
+          const ch = text[i - 1];
+          // 自然节奏：标点停顿、空格更快、字符间略有随机
+          const delay = ch === ' ' ? 50 : '·'.includes(ch) ? 320 : 90 + Math.random() * 80;
+          window.setTimeout(tick, delay);
+        }
+      };
+
+      window.setTimeout(tick, 500);
     }
   </script>
 
