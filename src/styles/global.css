@@ -576,6 +576,14 @@ a {
   padding-left: 1.5rem;
 }
 
+.post-body li + li {
+  margin-top: 0.5rem;
+}
+
+.post-body li::marker {
+  color: var(--accent);
+}
+
 .post-body img {
   max-width: 100%;
   height: auto;
@@ -623,16 +631,20 @@ code {
 .post-body td code {
   background: var(--code-bg);
   border: 1px solid var(--line);
-  padding: 0.15em 0.4em;
-  border-radius: 3px;
+  padding: 0.2em 0.45em;
+  border-radius: 5px;
+  color: var(--heading);
+  word-break: break-all;
 }
 
 pre {
-  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
   overflow-x: auto;
-  border-radius: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
   font-size: 0.85rem;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 pre code {
