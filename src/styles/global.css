@@ -2,6 +2,23 @@
    经典博客风（NexT-inspired）— 结构完整 · 细节精致
    ================================================== */
 
+/* 自托管 Lato，无外部字体请求 */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/lato-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/lato-latin-700-normal.woff2') format('woff2');
+}
+
 :root {
   --bg: #ffffff;
   --bg-soft: #f7f7f7;
@@ -100,21 +117,6 @@ a {
   *::after {
     animation: none !important;
     transition: none !important;
-  }
-}
-
-/* ---------- 顶部色带（流动渐变） ---------- */
-
-.headband {
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--heading), var(--accent));
-  background-size: 200% 100%;
-  animation: headband-flow 8s linear infinite;
-}
-
-@keyframes headband-flow {
-  to {
-    background-position: 200% 0;
   }
 }
 
