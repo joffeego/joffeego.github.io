@@ -13,7 +13,7 @@ backend:
     deleteMedia: '🗑️ 删除图片 {{path}}'
 
 site_url: https://joffee.eu.org
-logo_url: /images/avatar.svg
+logo_url: /images/avatar.jpg
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
