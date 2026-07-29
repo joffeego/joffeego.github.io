@@ -40,57 +40,59 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
   }
 
   <article class="post-full">
-    <header class="post-full-header">
-      <h1>{post.data.title}</h1>
-      <div class="post-meta">
-        <span class="meta-item">
-          <Icon name="calendar" />
-          <span>发表于</span>
-          <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-        </span>
-        {
-          post.data.categories.length > 0 && (
-            <>
-              <span class="meta-divider">|</span>
-              <span class="meta-item">
-                <Icon name="folder" />
-                <span>分类于</span>
-                {post.data.categories.map((c) => (
-                  <a href={`/categories/${encodeURIComponent(c)}/`}>{c}</a>
-                ))}
-              </span>
-            </>
-          )
-        }
-        <span class="meta-divider">|</span>
-        <span class="meta-item">
-          <Icon name="file" />
-          <span>{wordCount(post.body ?? '')} 字</span>
-        </span>
-        <span class="meta-divider">|</span>
-        <span class="meta-item">
-          <Icon name="clock" />
-          <span>约 {readingTime(post.body ?? '')} 分钟</span>
-        </span>
+    <div class="paper">
+      <header class="post-full-header">
+        <h1>{post.data.title}</h1>
+        <div class="post-meta">
+          <span class="meta-item">
+            <Icon name="calendar" />
+            <span>发表于</span>
+            <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+          </span>
+          {
+            post.data.categories.length > 0 && (
+              <>
+                <span class="meta-divider">|</span>
+                <span class="meta-item">
+                  <Icon name="folder" />
+                  <span>分类于</span>
+                  {post.data.categories.map((c) => (
+                    <a href={`/categories/${encodeURIComponent(c)}/`}>{c}</a>
+                  ))}
+                </span>
+              </>
+            )
+          }
+          <span class="meta-divider">|</span>
+          <span class="meta-item">
+            <Icon name="file" />
+            <span>{wordCount(post.body ?? '')} 字</span>
+          </span>
+          <span class="meta-divider">|</span>
+          <span class="meta-item">
+            <Icon name="clock" />
+            <span>约 {readingTime(post.body ?? '')} 分钟</span>
+          </span>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <Content />
       </div>
-    </header>
 
-    <div class="post-body">
-      <Content />
+      {
+        post.data.tags.length > 0 && (
+          <footer class="post-tags">
+            {post.data.tags.map((t) => (
+              <a class="post-tag" href={`/tags/${encodeURIComponent(t)}/`}>
+                <Icon name="hash" size={12} />
+                {t}
+              </a>
+            ))}
+          </footer>
+        )
+      }
     </div>
-
-    {
-      post.data.tags.length > 0 && (
-        <footer class="post-tags">
-          {post.data.tags.map((t) => (
-            <a class="post-tag" href={`/tags/${encodeURIComponent(t)}/`}>
-              <Icon name="hash" size={12} />
-              {t}
-            </a>
-          ))}
-        </footer>
-      )
-    }
 
     <nav class="post-nav">
       <div class="post-nav-item post-nav-prev">
