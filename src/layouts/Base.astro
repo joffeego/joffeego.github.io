@@ -18,7 +18,6 @@ const nav = [
   { href: '/categories/', label: '分类', icon: 'folder', match: (p: string) => p.startsWith('/categories/') },
   { href: '/archives/', label: '归档', icon: 'archive', match: (p: string) => p.startsWith('/archives/') },
   { href: '/tags/', label: '标签', icon: 'tag', match: (p: string) => p.startsWith('/tags/') },
-  { href: '/search/', label: '搜索', icon: 'search', match: (p: string) => p.startsWith('/search/') },
   { href: '/about/', label: '关于', icon: 'user', match: (p: string) => p.startsWith('/about/') },
 ] as const;
 ---
@@ -74,5 +73,62 @@ const nav = [
         <a href="/rss.xml">RSS 订阅</a>
       </p>
     </footer>
+
+    <button class="search-fab" id="search-fab" aria-label="搜索文章">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+
+    <div class="search-modal" id="search-modal">
+      <div class="search-modal-backdrop" id="search-backdrop"></div>
+      <div class="search-modal-content">
+        <button class="search-modal-close" id="search-close" aria-label="关闭搜索">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <div id="search-container"></div>
+      </div>
+    </div>
+
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <script is:inline src="/pagefind/pagefind-ui.js"></script>
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', () => {
+        const fab = document.getElementById('search-fab');
+        const modal = document.getElementById('search-modal');
+        const backdrop = document.getElementById('search-backdrop');
+        const closeBtn = document.getElementById('search-close');
+        const container = document.getElementById('search-container');
+        let loaded = false;
+
+        function openSearch() {
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+          if (!loaded) {
+            new PagefindUI({ element: container, showSubResults: true });
+            loaded = true;
+          }
+          setTimeout(() => container.querySelector('input')?.focus(), 100);
+        }
+
+        function closeSearch() {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+
+        fab.addEventListener('click', openSearch);
+        backdrop.addEventListener('click', closeSearch);
+        closeBtn.addEventListener('click', closeSearch);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeSearch();
+          if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            openSearch();
+          }
+        });
+      });
+    </script>
   </body>
 </html>
