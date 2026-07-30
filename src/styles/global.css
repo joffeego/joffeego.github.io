@@ -1120,7 +1120,8 @@ th {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
-  will-change: opacity;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .search-modal-content {
@@ -1199,6 +1200,36 @@ th {
 #search-container .pagefind-ui__result:hover {
   border-color: var(--line-strong);
   box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* 无图片时不预留缩略图空间 */
+#search-container .pagefind-ui__result:not(:has(.pagefind-ui__result-thumb)) {
+  flex-direction: column;
+}
+
+#search-container .pagefind-ui__result:not(:has(.pagefind-ui__result-thumb)) .pagefind-ui__result-inner {
+  margin-left: 0;
+}
+
+/* 有图片时正常排列 */
+#search-container .pagefind-ui__result:has(.pagefind-ui__result-thumb) {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+#search-container .pagefind-ui__result-thumb {
+  flex-shrink: 0;
+  width: 64px;
+  height: 48px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#search-container .pagefind-ui__result-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 #search-container .pagefind-ui__result-title {
