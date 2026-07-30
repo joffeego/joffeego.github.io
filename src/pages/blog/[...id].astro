@@ -47,7 +47,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         </div>
       )}
       <header class="post-full-header">
-        <h1>{post.data.title}</h1>
+        <h1 data-pagefind-meta="title">{post.data.title}</h1>
         <div class="post-meta">
           <span class="meta-item">
             <Icon name="calendar" />
@@ -81,7 +81,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         </div>
       </header>
 
-      <div class="post-body">
+      <div class="post-body" data-pagefind-body>
         <Content />
       </div>
 

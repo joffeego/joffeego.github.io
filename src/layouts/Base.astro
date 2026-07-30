@@ -18,6 +18,7 @@ const nav = [
   { href: '/categories/', label: '分类', icon: 'folder', match: (p: string) => p.startsWith('/categories/') },
   { href: '/archives/', label: '归档', icon: 'archive', match: (p: string) => p.startsWith('/archives/') },
   { href: '/tags/', label: '标签', icon: 'tag', match: (p: string) => p.startsWith('/tags/') },
+  { href: '/search/', label: '搜索', icon: 'search', match: (p: string) => p.startsWith('/search/') },
   { href: '/about/', label: '关于', icon: 'user', match: (p: string) => p.startsWith('/about/') },
 ] as const;
 ---
