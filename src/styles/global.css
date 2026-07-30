@@ -1145,7 +1145,8 @@ th {
   position: relative;
   z-index: 1;
   width: 92%;
-  max-width: 580px;
+  max-width: 560px;
+  max-height: 420px;
   background: var(--paper);
   border-radius: 12px;
   box-shadow:
@@ -1155,28 +1156,23 @@ th {
   transform: translateY(10px);
   will-change: transform;
   transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
 }
 
 .search-modal.open .search-modal-content {
   transform: translateY(0);
 }
 
-/* 顶部搜索栏 */
+/* 顶部搜索栏 — 固定不滚动 */
 
 .search-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   border-bottom: 1px solid var(--line);
-}
-
-.search-input-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 .search-icon {
@@ -1204,11 +1200,14 @@ th {
   line-height: 1;
 }
 
-/* Pagefind UI 覆盖 */
+/* Pagefind UI 覆盖 — 输入框在 header 内，结果在下方滚动 */
 
 #search-container {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #search-container .pagefind-ui {
@@ -1225,9 +1224,12 @@ th {
   --pagefind-ui-font: var(--font);
 }
 
+/* 表单行 — 只包含输入框，固定在顶部 */
+
 #search-container .pagefind-ui__form {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 #search-container .pagefind-ui__form::before {
@@ -1244,6 +1246,7 @@ th {
   font-size: 0.95rem;
   outline: none;
   box-shadow: none !important;
+  height: auto !important;
 }
 
 #search-container .pagefind-ui__search-input::placeholder {
@@ -1255,27 +1258,31 @@ th {
   display: none !important;
 }
 
-/* 结果区域 */
+/* 结果区域 — 可滚动 */
 
-#search-container .pagefind-ui__results {
-  padding: 0.5rem 0.75rem 0.75rem;
-  max-height: 55vh;
+#search-container .pagefind-ui__results-area {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
 }
 
-#search-container .pagefind-ui__results::-webkit-scrollbar {
+#search-container .pagefind-ui__results-area::-webkit-scrollbar {
   display: none;
+}
+
+#search-container .pagefind-ui__results {
+  padding: 0.35rem 0.5rem 0.5rem;
 }
 
 #search-container .pagefind-ui__result {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.65rem 0.75rem;
+  gap: 0.6rem;
+  padding: 0.5rem 0.65rem;
   border: none;
   border-radius: 6px;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
   transition: background-color 0.12s ease;
 }
 
@@ -1288,8 +1295,8 @@ th {
 
 #search-container .pagefind-ui__result-thumb {
   flex-shrink: 0;
-  width: 56px;
-  height: 42px;
+  width: 48px;
+  height: 36px;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1314,7 +1321,7 @@ th {
 /* 标题 */
 
 #search-container .pagefind-ui__result-title {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--heading);
   line-height: 1.4;
@@ -1331,10 +1338,10 @@ th {
 /* 摘要 */
 
 #search-container .pagefind-ui__result-excerpt {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--muted);
-  line-height: 1.5;
-  margin-top: 0.15rem;
+  line-height: 1.45;
+  margin-top: 0.1rem;
 }
 
 #search-container .pagefind-ui__result-excerpt mark {
@@ -1385,11 +1392,7 @@ th {
 
   .search-modal-content {
     width: 96%;
-    max-height: 80vh;
-  }
-
-  #search-container .pagefind-ui__results {
-    max-height: 60vh;
+    max-height: 70vh;
   }
 }
 
