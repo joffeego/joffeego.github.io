@@ -1104,10 +1104,11 @@ th {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 12vh;
+  padding-top: 15vh;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
+  will-change: opacity;
+  transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
 }
 
 .search-modal.open {
@@ -1118,36 +1119,37 @@ th {
 .search-modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.45);
+  will-change: opacity;
 }
 
 .search-modal-content {
   position: relative;
   z-index: 1;
-  width: 90%;
-  max-width: 600px;
-  max-height: 70vh;
+  width: 92%;
+  max-width: 560px;
+  max-height: 60vh;
   overflow-y: auto;
   background: var(--paper);
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  padding: 1.5rem;
-  transform: translateY(20px) scale(0.97);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 10px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+  padding: 1.25rem;
+  transform: translateY(12px);
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .search-modal.open .search-modal-content {
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
 }
 
 .search-modal-close {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0.6rem;
+  right: 0.6rem;
   z-index: 2;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: none;
   background: var(--bg-soft);
@@ -1156,7 +1158,7 @@ th {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .search-modal-close:hover {
@@ -1183,24 +1185,24 @@ th {
 #search-container .pagefind-ui__results {
   border: none;
   padding: 0;
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 #search-container .pagefind-ui__result {
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 #search-container .pagefind-ui__result:hover {
   border-color: var(--line-strong);
-  box-shadow: 0 4px 12px var(--shadow);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
 #search-container .pagefind-ui__result-title {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--heading);
 }
@@ -1210,16 +1212,23 @@ th {
 }
 
 #search-container .pagefind-ui__result-excerpt {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.55;
+  margin-top: 0.2rem;
 }
 
 #search-container .pagefind-ui__result-excerpt mark {
   background: var(--accent);
   color: #fff;
-  padding: 0.1em 0.3em;
+  padding: 0.05em 0.25em;
   border-radius: 3px;
+}
+
+#search-container .pagefind-ui__message {
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 0.4rem 0;
 }
 
 /* 隐藏 Pagefind 默认搜索图标，避免重叠 */
@@ -1230,20 +1239,20 @@ th {
 
 #search-container .pagefind-ui__search-input {
   width: 100%;
-  padding: 0.6rem 1rem !important;
+  padding: 0.5rem 0.85rem !important;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--paper);
   color: var(--heading);
   font-family: var(--font);
-  font-size: 1rem;
+  font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 #search-container .pagefind-ui__search-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(179, 65, 42, 0.1);
+  box-shadow: 0 0 0 2px rgba(179, 65, 42, 0.1);
 }
 
 #search-container .pagefind-ui__search-input::placeholder {
@@ -1261,13 +1270,14 @@ th {
   }
 
   .search-modal {
-    padding-top: 5vh;
+    padding-top: 8vh;
   }
 
   .search-modal-content {
     width: 95%;
-    padding: 1.25rem;
-    border-radius: 10px;
+    padding: 1rem;
+    border-radius: 8px;
+    max-height: 75vh;
   }
 }
 
