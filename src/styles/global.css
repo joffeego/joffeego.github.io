@@ -1224,9 +1224,13 @@ th {
 
 /* 隐藏 Pagefind 默认搜索图标，避免重叠 */
 
+#search-container .pagefind-ui__form::before {
+  display: none !important;
+}
+
 #search-container .pagefind-ui__search-input {
   width: 100%;
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 1rem !important;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--paper);
@@ -1242,12 +1246,9 @@ th {
   box-shadow: 0 0 0 3px rgba(179, 65, 42, 0.1);
 }
 
-#search-container .pagefind-ui__search::before {
-  display: none !important;
-}
-
 #search-container .pagefind-ui__search-input::placeholder {
   color: var(--muted);
+  opacity: 1;
 }
 
 @media (max-width: 480px) {
