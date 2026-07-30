@@ -81,6 +81,12 @@ const nav = [
       <span class="search-fab-label">搜索</span>
     </button>
 
+    <button class="back-to-top" id="back-to-top" aria-label="回到顶部">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+    </button>
+
     <div class="search-modal" id="search-modal">
       <div class="search-modal-backdrop" id="search-backdrop"></div>
       <div class="search-modal-content">
@@ -102,11 +108,11 @@ const nav = [
         const backdrop = document.getElementById('search-backdrop');
         const closeBtn = document.getElementById('search-close');
         const container = document.getElementById('search-container');
+        const backToTop = document.getElementById('back-to-top');
         let loaded = false;
 
         function openSearch() {
           modal.classList.add('open');
-          document.body.style.overflow = 'hidden';
           if (!loaded) {
             new PagefindUI({ element: container, showSubResults: true });
             loaded = true;
@@ -116,7 +122,6 @@ const nav = [
 
         function closeSearch() {
           modal.classList.remove('open');
-          document.body.style.overflow = '';
         }
 
         fab.addEventListener('click', openSearch);
@@ -128,6 +133,19 @@ const nav = [
             e.preventDefault();
             openSearch();
           }
+        });
+
+        // 回到顶部按钮：滚动超过 300px 显示
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            backToTop.classList.add('show');
+          } else {
+            backToTop.classList.remove('show');
+          }
+        }, { passive: true });
+
+        backToTop.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         });
       });
     </script>

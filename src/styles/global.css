@@ -52,6 +52,12 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -1097,6 +1103,39 @@ th {
   pointer-events: none;
 }
 
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.5rem;
+  z-index: 90;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .search-modal {
   position: fixed;
   inset: 0;
@@ -1298,6 +1337,13 @@ th {
     right: 1.25rem;
     padding: 0.4rem 0.75rem;
     font-size: 0.82rem;
+  }
+
+  .back-to-top {
+    bottom: 1.25rem;
+    right: 5.5rem;
+    width: 36px;
+    height: 36px;
   }
 
   .search-modal {
