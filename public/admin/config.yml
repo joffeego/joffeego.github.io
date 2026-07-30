@@ -27,14 +27,30 @@ collections:
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
     extension: md
     format: yaml-frontmatter
+    summary: '{{title}} — {{date}}'
+    sortable_fields: ['date', 'title']
+    view_filters:
+      - label: 草稿
+        field: draft
+        pattern: true
     fields:
       - label: 标题
         name: title
         widget: string
+        pattern: ['^.{2,80}$', '标题长度需在 2-80 个字符之间']
+      - label: 封面图
+        name: cover
+        widget: image
+        required: false
+        hint: 文章封面，建议尺寸 1200×630
+        media_library:
+          config:
+            max_file_size: 5242880
       - label: 发布日期
         name: date
         widget: datetime
         type: date
+        format: YYYY-MM-DD
       - label: 摘要
         name: description
         widget: string
@@ -42,12 +58,34 @@ collections:
         hint: 留空则自动截取正文开头作为摘要
       - label: 分类
         name: categories
-        widget: list
+        widget: select
+        multiple: true
         required: false
+        options:
+          - 技术
+          - 生活
+          - 随笔
+          - 教程
+          - 项目
+          - 工具
       - label: 标签
         name: tags
-        widget: list
+        widget: select
+        multiple: true
         required: false
+        options:
+          - ADB
+          - Android
+          - Astro
+          - JavaScript
+          - CSS
+          - 前端
+          - 后端
+          - Linux
+          - Git
+          - 效率
+          - 开发工具
+          - 随手记
       - label: 草稿
         name: draft
         widget: boolean

@@ -12,6 +12,13 @@ const summary = post.data.description ?? excerpt(post.body ?? '');
 ---
 
 <article class="post-card">
+  {post.data.cover && (
+    <div class="post-card-cover">
+      <a href={`/blog/${post.id}/`}>
+        <img src={post.data.cover} alt={post.data.title} loading="lazy" />
+      </a>
+    </div>
+  )}
   <header class="post-card-header">
     <h2 class="post-card-title">
       <a href={`/blog/${post.id}/`}>{post.data.title}</a>

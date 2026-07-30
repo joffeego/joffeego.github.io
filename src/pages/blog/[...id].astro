@@ -41,6 +41,11 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
   <article class="post-full">
     <div class="paper">
+      {post.data.cover && (
+        <div class="post-cover">
+          <img src={post.data.cover} alt={post.data.title} />
+        </div>
+      )}
       <header class="post-full-header">
         <h1>{post.data.title}</h1>
         <div class="post-meta">
