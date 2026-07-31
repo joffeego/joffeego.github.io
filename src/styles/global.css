@@ -219,12 +219,12 @@ a {
 /* ---------- 布局 ---------- */
 
 .layout {
-  max-width: 1080px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 1rem 1.5rem 3rem;
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr);
-  gap: 4rem;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 3rem;
   align-items: start;
 }
 
@@ -339,7 +339,7 @@ a {
 .toc-float {
   position: fixed;
   top: 6rem;
-  right: max(1rem, calc((100vw - 1080px) / 2 - 240px));
+  right: max(1rem, calc((100vw - 1200px) / 2 - 240px));
   width: 200px;
   opacity: 0;
   transform: translateX(10px);
