@@ -1305,25 +1305,13 @@ tr:hover td {
   transform: translateY(0) scale(1);
 }
 
-/* 顶部搜索栏 — 固定不滚动 */
-
-.search-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--line);
-  flex-shrink: 0;
-  background: var(--bg-soft);
-}
-
-.search-icon {
-  flex-shrink: 0;
-  color: var(--muted);
-}
+/* ESC 关闭按钮 — 右上角 */
 
 .search-modal-close {
-  flex-shrink: 0;
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
   border: none;
   background: none;
   cursor: pointer;
@@ -1335,14 +1323,14 @@ tr:hover td {
   padding: 0.2em 0.5em;
   border: 1px solid var(--line);
   border-radius: 5px;
-  background: var(--paper);
+  background: var(--bg-soft);
   font-family: var(--font);
   font-size: 0.7rem;
   color: var(--muted);
   line-height: 1;
 }
 
-/* Pagefind UI 覆盖 — 输入框在 header 内，结果在下方滚动 */
+/* Pagefind UI 覆盖 — 输入框在顶部，结果在下方滚动 */
 
 #search-container {
   flex: 1;
@@ -1364,18 +1352,30 @@ tr:hover td {
   --pagefind-ui-image-border-radius: 4px;
   --pagefind-ui-image-box-ratio: 3 / 2;
   --pagefind-ui-font: var(--font);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 表单行 — 只包含输入框，固定在顶部 */
+/* 搜索表单 — 固定在顶部 */
 
 #search-container .pagefind-ui__form {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  padding-right: 3.5rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-soft);
   flex-shrink: 0;
 }
 
 #search-container .pagefind-ui__form::before {
-  display: none !important;
+  content: '';
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 #search-container .pagefind-ui__search-input {
