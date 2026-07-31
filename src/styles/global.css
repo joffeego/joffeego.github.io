@@ -52,12 +52,33 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
 }
 
+/* 全局自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* 隐藏主页面滚动条 */
 html::-webkit-scrollbar {
-  display: none;
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -311,6 +332,76 @@ a {
 
 .toc a:hover {
   color: var(--accent);
+}
+
+/* ---------- 悬浮目录（右侧） ---------- */
+
+.toc-float {
+  position: fixed;
+  top: 5rem;
+  right: calc((100vw - 1080px) / 2 - 220px);
+  width: 200px;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.toc-float.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.toc-float .toc-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.toc-float .toc-list {
+  max-height: calc(100vh - 10rem);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.toc-float ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.toc-float li {
+  margin: 0.2rem 0;
+}
+
+.toc-float li.toc-sub {
+  padding-left: 0.75rem;
+}
+
+.toc-float a {
+  color: var(--muted);
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.15rem 0.5rem;
+  border-left: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.toc-float a:hover {
+  color: var(--accent);
+}
+
+.toc-float a.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 500;
 }
 
 /* ---------- 文章卡片（首页摘要流） ---------- */
@@ -729,12 +820,14 @@ pre code {
   overflow-x: auto;
   margin: 1.5rem 0;
   -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  border: 1px solid var(--line);
 }
 
 .post-body table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -743,13 +836,13 @@ pre code {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
 th,
 td {
-  padding: 0.55rem 0.85rem;
-  border: 1px solid var(--line);
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--line);
   text-align: left;
   white-space: nowrap;
 }
@@ -757,15 +850,31 @@ td {
 th {
   background: var(--bg-soft);
   color: var(--heading);
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  position: sticky;
+  top: 0;
 }
 
 td {
   color: var(--text);
 }
 
+tr:last-child td {
+  border-bottom: none;
+}
+
 tr:hover td {
   background: var(--bg-soft);
+}
+
+/* 移动端表格优化 */
+@supports (overflow: overlay) {
+  .table-wrap {
+    overflow: overlay;
+  }
 }
 
 /* ---------- 独立页面头部 ---------- */
@@ -1281,11 +1390,19 @@ tr:hover td {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-width: none;
 }
 
 #search-container .pagefind-ui__results-area::-webkit-scrollbar {
-  display: none;
+  width: 4px;
+}
+
+#search-container .pagefind-ui__results-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#search-container .pagefind-ui__results-area::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 2px;
 }
 
 #search-container .pagefind-ui__results {
@@ -1448,6 +1565,34 @@ tr:hover td {
   color: var(--accent);
 }
 
+/* 悬浮目录滚动条 */
+.toc-float .toc-list::-webkit-scrollbar {
+  width: 3px;
+}
+
+.toc-float .toc-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc-float .toc-list::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+
+/* 表格滚动条 */
+.table-wrap::-webkit-scrollbar {
+  height: 4px;
+}
+
+.table-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 2px;
+}
+
 /* ---------- 响应式 ---------- */
 
 /* ---------- 响应式 ---------- */
@@ -1457,6 +1602,11 @@ tr:hover td {
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 1rem 1.25rem 2.5rem;
+  }
+
+  /* 隐藏悬浮目录 */
+  .toc-float {
+    display: none;
   }
 
   /* 侧栏变紧凑横条：头像 + 简介 + 社交一行 */
