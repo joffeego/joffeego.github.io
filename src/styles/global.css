@@ -338,8 +338,8 @@ a {
 
 .toc-float {
   position: fixed;
-  top: 5rem;
-  right: calc((100vw - 1080px) / 2 - 220px);
+  top: 6rem;
+  right: max(1rem, calc((100vw - 1080px) / 2 - 240px));
   width: 200px;
   opacity: 0;
   transform: translateX(10px);

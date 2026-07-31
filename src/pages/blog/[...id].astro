@@ -131,6 +131,7 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     const toc = document.getElementById('toc-float');
     if (!toc) return;
 
+    const tocList = toc.querySelector('.toc-list');
     const links = toc.querySelectorAll('a');
     const headings = [];
     links.forEach(link => {
@@ -143,12 +144,25 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
     if (headings.length === 0) return;
 
+    // 阻止 TOC 上的滚轮事件冒泡到页面
+    tocList.addEventListener('wheel', (e) => {
+      e.stopPropagation();
+    }, { passive: true });
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           links.forEach(l => l.classList.remove('active'));
           const match = headings.find(h => h.el === entry.target);
-          if (match) match.link.classList.add('active');
+          if (match) {
+            match.link.classList.add('active');
+            // 滚动 TOC 到可见位置
+            const linkRect = match.link.getBoundingClientRect();
+            const listRect = tocList.getBoundingClientRect();
+            if (linkRect.top < listRect.top || linkRect.bottom > listRect.bottom) {
+              match.link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }
+          }
         }
       });
     }, { rootMargin: '-80px 0px -70% 0px' });
