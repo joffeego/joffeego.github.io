@@ -1,4 +1,4 @@
----
+﻿---
 title: Claude Code 进阶使用指南
 cover: ''
 date: 2026-07-31
@@ -16,6 +16,7 @@ draft: false
 ### 基础命令
 
 | 命令 | 说明 |
+| --- | --- |
 | claude | 启动 Claude Code 交互模式 |
 | claude "你的问题" | 直接提问，快速获取回答 |
 | claude -p "提示词" | 以管道模式运行，适合脚本调用 |
@@ -29,6 +30,7 @@ draft: false
 ### 文件操作命令
 
 | 命令 | 说明 |
+| --- | --- |
 | /read <文件路径> | 读取指定文件 |
 | /edit <文件路径> | 编辑指定文件 |
 | /write <文件路径> | 写入文件 |
@@ -158,6 +160,7 @@ MCP（Model Context Protocol）是 Claude Code 的扩展协议，允许连接外
 ### 常用 MCP Server 示例
 
 | MCP Server | 用途 | 安装方式 |
+| --- | --- | --- |
 | filesystem | 文件系统操作 | 内置 |
 | shimo-mcp-doc | 石墨文档集成 | 公司内部配置 |
 | github | GitHub 操作 | `npx -y @modelcontextprotocol/server-github` |
@@ -199,6 +202,7 @@ Hooks 允许你在 Claude Code 执行特定操作前后自动运行自定义脚�
 ### 可用的 Hook 事件
 
 | 事件 | 触发时机 | 用途 |
+| --- | --- | --- |
 | PreToolUse | 工具调用前 | 权限检查、参数校验 |
 | PostToolUse | 工具调用后 | 日志记录、自动格式化 |
 | Notification | 发送通知时 | 自定义通知方式 |
@@ -375,3 +379,4 @@ triggers:
 | 复杂代码分析 | Opus | 更强的推理能力 |
 | 快速查询 | Haiku | 速度最快，成本低 |
 | 日志深度分析 | 自定义 Mode | 结合 Skill 使用 |
+
