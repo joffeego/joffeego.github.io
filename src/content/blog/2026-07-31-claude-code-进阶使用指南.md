@@ -3,8 +3,11 @@ title: Claude Code 进阶使用指南
 cover: ''
 date: 2026-07-31
 description: ''
-categories: []
-tags: []
+categories:
+  - 技术
+tags:
+  - 开发工具
+  - 效率
 draft: false
 ---
 
@@ -22,8 +25,7 @@ draft: false
 | /model | 切换模型 |
 | /cost | 查看当前会话的 token 消耗 |
 | /quit 或 Ctrl+C | 退出 Claude Code |
- 
- 
+
 ### 文件操作命令
 
 | 命令 | 说明 |
@@ -32,8 +34,7 @@ draft: false
 | /write <文件路径> | 写入文件 |
 | /grep <关键词> | 在代码中搜索关键词 |
 | /glob <模式> | 按模式匹配文件 |
- 
- 
+
 ### 实用快捷操作
 
 - **Tab 键**：自动补全文件路径和命令
@@ -41,9 +42,6 @@ draft: false
 - **直接粘贴**：可以直接粘贴代码片段让 Claude 分析
 - **@文件名**：在对话中引用特定文件
 
-
-
- 
 ## CLAUDE.md 配置详解
 
 ### 什么是 CLAUDE.md
@@ -92,9 +90,6 @@ CLAUDE.md 支持多个层级，优先级从高到低：
 
 这样可以在不修改 CLAUDE.md 的情况下，动态加载额外的指令。
 
-
-
- 
 ## Memory（记忆系统）
 
 ### 什么是 Memory
@@ -113,8 +108,7 @@ Memory 是 Claude Code 的持久化记忆机制，可以将重要的上下文信
 | feedback | 工作反馈和改进建议 | "分析 log 时优先检查 mtkcam 关键字" |
 | project | 项目约束和目标 | "当前项目基于 MTK Kompanie 平台" |
 | reference | 外部资源引用 | "MTK Camera 调试文档链接" |
- 
- 
+
 ### Memory 文件格式
 
 ```plain
@@ -137,9 +131,6 @@ metadata:
 - **更新记忆**：直接编辑对应的 .md 文件
 - **删除记忆**：删除对应的 .md 文件，并更新 MEMORY.md 索引
 
-
-
- 
 ## MCP Server 配置
 
 ### 什么是 MCP
@@ -171,16 +162,12 @@ MCP（Model Context Protocol）是 Claude Code 的扩展协议，允许连接外
 | shimo-mcp-doc | 石墨文档集成 | 公司内部配置 |
 | github | GitHub 操作 | `npx -y @modelcontextprotocol/server-github` |
 | postgres | 数据库查询 | `npx -y @modelcontextprotocol/server-postgres` |
- 
- 
+
 ### MCP Server 管理命令
 
 - /mcp — 查看当前已连接的 MCP Server 状态
 - 在 settings.json 中添加/删除 MCP Server 配置后需重启 Claude Code
 
-
-
- 
 ## Hooks（钩子机制）
 
 ### 什么是 Hooks
@@ -216,11 +203,7 @@ Hooks 允许你在 Claude Code 执行特定操作前后自动运行自定义脚�
 | PostToolUse | 工具调用后 | 日志记录、自动格式化 |
 | Notification | 发送通知时 | 自定义通知方式 |
 | Stop | Claude 停止响应时 | 自动化收尾工作 |
- 
- 
 
-
- 
 ## 权限管理
 
 ### 权限层级
@@ -262,9 +245,6 @@ Claude Code 的权限管理分为三级：
 - **自动接受**：claude --dangerously-skip-permissions（不推荐）
 - **Yolo 模式**：在设置中配置信任的操作自动执行
 
-
-
- 
 ## 常见问题排查（FAQ）
 
 ### 连接问题
@@ -337,9 +317,6 @@ triggers:
 具体的分析步骤和指令...
 ```
 
-
-
- 
 ## 最佳实践
 
 ### 1. 高效使用 Skill 进行日志分析
@@ -366,9 +343,6 @@ triggers:
 - **统一 Skill 配置**：团队共享 Skill 文件，保持分析标准一致
 - **规范 Mode 配置**：统一团队使用的 Mode，确保输出质量
 
-
-
- 
 ## 快速参考卡片
 
 ### 日常使用流程
