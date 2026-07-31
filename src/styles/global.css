@@ -509,29 +509,22 @@ a {
   z-index: 0;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 3px;
+  border-radius: 6px;
   box-shadow: var(--paper-shadow);
-  padding: 3rem 3.5rem 2.5rem;
+  padding: 2.5rem 3rem 2rem;
+  overflow: hidden;
 }
 
-/* 纸堆效果：底下两张微微错开的纸 */
-.paper::before,
-.paper::after {
+/* 顶部装饰线 */
+.paper::before {
   content: '';
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 3px;
-}
-
-.paper::before {
-  transform: rotate(-1.1deg);
-}
-
-.paper::after {
-  transform: rotate(0.7deg);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  border-radius: 6px 6px 0 0;
 }
 
 .paper .post-tags {
@@ -1565,11 +1558,11 @@ tr:hover td {
   /* 纸张接近满宽，内容更宽敞 */
   .paper {
     padding: 1.75rem 1.15rem 1.5rem;
+    border-radius: 4px;
   }
 
-  .paper::before,
-  .paper::after {
-    display: none;
+  .paper::before {
+    height: 2px;
   }
 
   .post-full-header {
