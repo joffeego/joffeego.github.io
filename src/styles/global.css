@@ -87,7 +87,7 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.7;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -221,10 +221,10 @@ a {
 .layout {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 1.5rem 3rem;
+  padding: 1rem 2rem 3rem;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 3rem;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 3.5rem;
   align-items: start;
 }
 
@@ -234,6 +234,7 @@ a {
   position: sticky;
   top: 2rem;
   text-align: center;
+  padding-right: 1rem;
 }
 
 .avatar {
@@ -791,12 +792,13 @@ code {
 
 pre {
   margin: 1.25rem 0;
-  padding: 1rem 1.15rem;
+  padding: 1rem 1.25rem;
   overflow-x: auto;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--line);
+  background: var(--bg-soft);
   font-size: 0.82rem;
-  line-height: 1.7;
+  line-height: 1.65;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -804,6 +806,7 @@ pre code {
   background: none;
   border: none;
   padding: 0;
+  font-size: inherit;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1589,6 +1592,20 @@ tr:hover td {
 }
 
 .table-wrap::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 2px;
+}
+
+/* 代码块滚动条 */
+pre::-webkit-scrollbar {
+  height: 4px;
+}
+
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
   background: var(--line);
   border-radius: 2px;
 }
