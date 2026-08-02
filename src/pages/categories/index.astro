@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -19,11 +20,12 @@ const categories = [...counts.entries()].sort((a, b) => b[1] - a[1]);
     <p class="page-desc">目前共计 {categories.length} 个分类。</p>
   </div>
 
-  <ul class="term-list">
+  <ul class="term-grid">
     {
       categories.map(([name, count]) => (
         <li>
           <a href={`/categories/${encodeURIComponent(name)}/`}>
+            <Icon name="folder" size={14} />
             <span class="term-name">{name}</span>
             <span class="term-count">{count}</span>
           </a>

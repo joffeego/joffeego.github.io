@@ -26,7 +26,10 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
     {
       years.map((year) => (
         <section class="archive-year">
-          <h2 class="archive-year-title">{year}</h2>
+          <h2 class="archive-year-title">
+            {year}
+            <span class="archive-year-count">{byYear.get(year)!.length} 篇</span>
+          </h2>
           <ul class="archive-list">
             {byYear.get(year)!.map((post) => (
               <li>

@@ -27,8 +27,9 @@ const max = Math.max(1, ...tags.map(([, c]) => c));
           href={`/tags/${encodeURIComponent(name)}/`}
           style={`font-size: ${0.85 + (count / max) * 0.6}rem`}
         >
+          <span class="tag-hash" aria-hidden="true">#</span>
           {name}
-          <sup>{count}</sup>
+          <span class="tag-count">{count}</span>
         </a>
       ))
     }

@@ -1,21 +1,27 @@
 ---
 import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).length;
 ---
 
 <Base title="关于">
   <div class="page-header">
     <h1>关于</h1>
   </div>
-  <article class="post-body">
-    <p>你好，我是 <strong>JoffeeGo</strong>。</p>
+
+  <div class="about-card">
+    <h2>你好，我是 JoffeeGo</h2>
     <p>
       这个博客记录我的技术学习、生活感悟和一切有趣的事。
       不追热点，不求更新频率，只写真正想写的东西。
     </p>
-    <p>找到我：</p>
-    <ul>
-      <li><a href="https://github.com/joffeego">GitHub</a></li>
-      <li><a href="/rss.xml">RSS 订阅</a></li>
+    <p class="about-stat">目前已发布 {posts} 篇文章。</p>
+
+    <ul class="about-meta">
+      <li>由 Astro 强力驱动</li>
+      <li>GitHub Pages 托管</li>
+      <li>支持站内搜索与 <a href="/rss.xml">RSS 订阅</a></li>
     </ul>
-  </article>
+  </div>
 </Base>

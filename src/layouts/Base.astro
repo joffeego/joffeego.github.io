@@ -6,11 +6,20 @@ import Icon from '../components/Icon.astro';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  ogType?: string;
 }
 
-const { title, description = '技术 · 生活 · 思考' } = Astro.props;
+const {
+  title,
+  description = '技术 · 生活 · 思考',
+  ogImage = '/images/avatar.jpg',
+  ogType = 'website',
+} = Astro.props;
 const pageTitle = title ? `${title} · JoffeeGo` : "JoffeeGo's Blog";
 const year = new Date().getFullYear();
+const absUrl = (p: string) => new URL(p, Astro.site).toString();
+const imageUrl = absUrl(ogImage || '/images/avatar.jpg');
 
 const path = Astro.url.pathname;
 const nav = [
@@ -29,10 +38,25 @@ const nav = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="JoffeeGo's Blog" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:url" content={absUrl(Astro.url.pathname)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="robots" content="index, follow" />
     <link rel="alternate" type="application/rss+xml" title="JoffeeGo's Blog" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" />
-    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" />
+    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" />
+      <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" />
+    </noscript>
     <title>{pageTitle}</title>
     <script is:inline>
       // 主题初始化:优先读取用户选择,否则跟随系统(提前执行避免闪烁)
@@ -43,11 +67,22 @@ const nav = [
             t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           }
           document.documentElement.setAttribute('data-theme', t);
+          // 原生控件配色跟随主题
+          var cs = document.createElement('meta');
+          cs.name = 'color-scheme';
+          cs.content = t;
+          document.head.appendChild(cs);
+          var tc = document.createElement('meta');
+          tc.name = 'theme-color';
+          tc.content = t === 'dark' ? '#131314' : '#f0efeb';
+          document.head.appendChild(tc);
         } catch (e) {}
       })();
     </script>
   </head>
   <body>
+    <canvas class="particles-bg" id="particles-bg" aria-hidden="true"></canvas>
+    <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
     <header class="site-header">
       <div class="site-brand">
         <a href="/" class="brand">
@@ -103,7 +138,7 @@ const nav = [
       </svg>
     </button>
 
-    <div class="search-modal" id="search-modal">
+    <div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-label="搜索文章">
       <div class="search-modal-backdrop" id="search-backdrop"></div>
       <div class="search-modal-content">
         <div id="search-container"></div>
@@ -113,8 +148,6 @@ const nav = [
       </div>
     </div>
 
-    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-    <script is:inline src="/pagefind/pagefind-ui.js"></script>
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
         // 主题切换:用 View Transitions 做"新主题从按钮位置圆形展开"动画,
@@ -124,7 +157,18 @@ const nav = [
           document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
         const applyTheme = (theme) => {
           document.documentElement.setAttribute('data-theme', theme);
-          try { localStorage.setItem('theme', theme); } catch (e) {}
+          try {
+            localStorage.setItem('theme', theme);
+            const cs = document.querySelector('meta[name="color-scheme"]');
+            if (cs) cs.setAttribute('content', theme);
+            const tc = document.querySelector('meta[name="theme-color"]');
+            if (tc) {
+              tc.setAttribute(
+                'content',
+                getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
+              );
+            }
+          } catch (e) {}
         };
         let themeAnimating = false;
         themeBtn.addEventListener('click', () => {
@@ -156,10 +200,22 @@ const nav = [
         function openSearch() {
           modal.classList.add('open');
           if (!loaded) {
-            new PagefindUI({ element: container, showSubResults: true });
             loaded = true;
+            // 懒加载 Pagefind 资源(首次打开弹窗才加载)
+            const pfLink = document.createElement('link');
+            pfLink.rel = 'stylesheet';
+            pfLink.href = '/pagefind/pagefind-ui.css';
+            document.head.appendChild(pfLink);
+            const pfScript = document.createElement('script');
+            pfScript.src = '/pagefind/pagefind-ui.js';
+            pfScript.onload = () => {
+              new PagefindUI({ element: container, showSubResults: true });
+              setTimeout(() => container.querySelector('input')?.focus(), 100);
+            };
+            document.body.appendChild(pfScript);
+          } else {
+            setTimeout(() => container.querySelector('input')?.focus(), 100);
           }
-          setTimeout(() => container.querySelector('input')?.focus(), 100);
         }
 
         function closeSearch() {
@@ -195,20 +251,245 @@ const nav = [
           const btn = document.createElement('button');
           btn.className = 'code-copy-btn';
           btn.textContent = '复制';
+          const reset = () => {
+            btn.textContent = '复制';
+            btn.classList.remove('copied');
+          };
+          const done = () => {
+            btn.textContent = '已复制';
+            btn.classList.add('copied');
+            setTimeout(reset, 1500);
+          };
+          const fail = () => {
+            btn.textContent = '复制失败';
+            btn.classList.add('copied');
+            setTimeout(reset, 1500);
+          };
           btn.addEventListener('click', () => {
             const code = pre.querySelector('code')?.textContent ?? pre.textContent;
-            navigator.clipboard.writeText(code).then(() => {
-              btn.textContent = '已复制';
-              btn.classList.add('copied');
-              setTimeout(() => {
-                btn.textContent = '复制';
-                btn.classList.remove('copied');
-              }, 1500);
+            navigator.clipboard.writeText(code).then(done).catch(() => {
+              // 降级:选中隐藏 textarea 走 execCommand
+              try {
+                const ta = document.createElement('textarea');
+                ta.value = code;
+                ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+                document.body.appendChild(ta);
+                ta.select();
+                const ok = document.execCommand('copy');
+                ta.remove();
+                ok ? done() : fail();
+              } catch {
+                fail();
+              }
             });
           });
           pre.style.position = 'relative';
           pre.appendChild(btn);
         });
+
+        // 顶部阅读进度条(只动 transform,低负载)
+        const progress = document.getElementById('reading-progress');
+        if (progress) {
+          let ticking = false;
+          const updateProgress = () => {
+            const doc = document.documentElement;
+            const max = doc.scrollHeight - window.innerHeight;
+            const ratio = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+            progress.style.transform = `scaleX(${ratio})`;
+            ticking = false;
+          };
+          window.addEventListener('scroll', () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(updateProgress);
+            }
+          }, { passive: true });
+          updateProgress();
+        }
+
+        // 滚动进场揭示:只对首屏之外的元素隐藏并观察,首屏交给加载动画(fade-up)
+        const revealEls = document.querySelectorAll(
+          '.page-header, .post-stream > .post-card, .post-cover, .post-body h2, .post-body img'
+        );
+        if (revealEls.length && 'IntersectionObserver' in window) {
+          const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                setTimeout(() => entry.target.classList.remove('reveal', 'in'), 900);
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+          revealEls.forEach((el) => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top >= 0 && rect.top < window.innerHeight) return; // 首屏:不隐藏
+            el.classList.add('reveal');
+            revealObserver.observe(el);
+          });
+        }
+
+        // 滚动降级:滚动中给 html 加标记(降低 TOC 模糊),停止 200ms 后恢复
+        let scrollDegradeTimer = null;
+        window.addEventListener('scroll', () => {
+          document.documentElement.classList.add('js-scrolling');
+          clearTimeout(scrollDegradeTimer);
+          scrollDegradeTimer = setTimeout(() => {
+            document.documentElement.classList.remove('js-scrolling');
+          }, 200);
+        }, { passive: true });
+
+        // 背景粒子:漂浮 + 相邻连线 + 鼠标吸附(轻量 canvas,颜色跟随主题)
+        const particleCanvas = document.getElementById('particles-bg');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (particleCanvas && !reducedMotion.matches) {
+          const pctx = particleCanvas.getContext('2d');
+          let particles = [];
+          let mouse = { x: -9999, y: -9999 };
+          let pColor = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#999999';
+          let raf = 0;
+          let running = true;
+
+          const resizeParticles = () => {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            particleCanvas.width = w * dpr;
+            particleCanvas.height = h * dpr;
+            particleCanvas.style.width = w + 'px';
+            particleCanvas.style.height = h + 'px';
+            pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            const count = Math.max(16, Math.min(42, Math.round((w * h) / 28000)));
+            particles = Array.from({ length: count }, () => ({
+              x: Math.random() * w,
+              y: Math.random() * h,
+              vx: (Math.random() - 0.5) * 0.5,
+              vy: (Math.random() - 0.5) * 0.5,
+              r: 1 + Math.random() * 1.2,
+            }));
+          };
+
+          const stepParticles = () => {
+            if (!running) return;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const LINK = 130;
+            const MOUSE_R = 150;
+            pctx.clearRect(0, 0, w, h);
+            pctx.fillStyle = pColor;
+            pctx.strokeStyle = pColor;
+            pctx.lineWidth = 1;
+            for (const p of particles) {
+              // 鼠标吸附
+              const dxm = mouse.x - p.x;
+              const dym = mouse.y - p.y;
+              const dm = Math.hypot(dxm, dym);
+              if (dm < MOUSE_R && dm > 0.01) {
+                const pull = (1 - dm / MOUSE_R) * 0.025;
+                p.vx += (dxm / dm) * pull;
+                p.vy += (dym / dm) * pull;
+              }
+              // 限速,保持缓慢漂浮
+              const sp = Math.hypot(p.vx, p.vy);
+              const maxSp = 0.55;
+              if (sp > maxSp) {
+                p.vx = (p.vx / sp) * maxSp;
+                p.vy = (p.vy / sp) * maxSp;
+              }
+              p.x += p.vx;
+              p.y += p.vy;
+              if (p.x < -20) p.x = w + 20;
+              else if (p.x > w + 20) p.x = -20;
+              if (p.y < -20) p.y = h + 20;
+              else if (p.y > h + 20) p.y = -20;
+              pctx.globalAlpha = 0.5;
+              pctx.beginPath();
+              pctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+              pctx.fill();
+            }
+            // 粒子间连线
+            for (let i = 0; i < particles.length; i++) {
+              for (let j = i + 1; j < particles.length; j++) {
+                const a = particles[i];
+                const b = particles[j];
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+                const d = Math.hypot(dx, dy);
+                if (d < LINK) {
+                  pctx.globalAlpha = (1 - d / LINK) * 0.2;
+                  pctx.beginPath();
+                  pctx.moveTo(a.x, a.y);
+                  pctx.lineTo(b.x, b.y);
+                  pctx.stroke();
+                }
+              }
+            }
+            // 鼠标连线
+            if (mouse.x > -1000) {
+              for (const p of particles) {
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const d = Math.hypot(dx, dy);
+                if (d < MOUSE_R) {
+                  pctx.globalAlpha = (1 - d / MOUSE_R) * 0.28;
+                  pctx.beginPath();
+                  pctx.moveTo(p.x, p.y);
+                  pctx.lineTo(mouse.x, mouse.y);
+                  pctx.stroke();
+                }
+              }
+            }
+            pctx.globalAlpha = 1;
+            raf = requestAnimationFrame(stepParticles);
+          };
+
+          window.addEventListener('resize', resizeParticles);
+          window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+          }, { passive: true });
+          document.documentElement.addEventListener('mouseleave', () => {
+            mouse.x = -9999;
+            mouse.y = -9999;
+          });
+
+          // 主题切换时刷新粒子颜色
+          const colorWatcher = new MutationObserver(() => {
+            pColor = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || pColor;
+          });
+          colorWatcher.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+          reducedMotion.addEventListener('change', (e) => {
+            if (e.matches) {
+              running = false;
+              cancelAnimationFrame(raf);
+              pctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            } else if (!running) {
+              running = true;
+              resizeParticles();
+              stepParticles();
+            }
+          });
+
+          // 滚动时暂停粒子,停止 200ms 后恢复(与 TOC 模糊降级配合,减轻低端设备压力)
+          let particleScrollTimer = null;
+          window.addEventListener('scroll', () => {
+            if (running) {
+              running = false;
+              cancelAnimationFrame(raf);
+            }
+            clearTimeout(particleScrollTimer);
+            particleScrollTimer = setTimeout(() => {
+              if (!running && !reducedMotion.matches) {
+                running = true;
+                stepParticles();
+              }
+            }, 200);
+          }, { passive: true });
+
+          resizeParticles();
+          stepParticles();
+        }
       });
     </script>
   </body>
