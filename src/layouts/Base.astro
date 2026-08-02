@@ -34,6 +34,18 @@ const nav = [
     <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" />
     <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" />
     <title>{pageTitle}</title>
+    <script is:inline>
+      // 主题初始化:优先读取用户选择,否则跟随系统(提前执行避免闪烁)
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -74,12 +86,15 @@ const nav = [
       </p>
     </footer>
 
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色/浅色主题" title="切换主题">
+      <svg class="theme-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="theme-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
     <button class="search-fab" id="search-fab" aria-label="搜索文章">
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-      <span class="search-fab-label">搜索</span>
-      <kbd class="search-kbd">⌘K</kbd>
     </button>
 
     <button class="back-to-top" id="back-to-top" aria-label="回到顶部">
@@ -102,6 +117,34 @@ const nav = [
     <script is:inline src="/pagefind/pagefind-ui.js"></script>
     <script is:inline>
       document.addEventListener('DOMContentLoaded', () => {
+        // 主题切换:用 View Transitions 做"新主题从按钮位置圆形展开"动画,
+        // 内容是页面快照(全程可见),不会出现先全黑/全白再切换的遮罩
+        const themeBtn = document.getElementById('theme-toggle');
+        const getTheme = () =>
+          document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        const applyTheme = (theme) => {
+          document.documentElement.setAttribute('data-theme', theme);
+          try { localStorage.setItem('theme', theme); } catch (e) {}
+        };
+        let themeAnimating = false;
+        themeBtn.addEventListener('click', () => {
+          if (themeAnimating) return;
+          const next = getTheme() === 'dark' ? 'light' : 'dark';
+          const rect = themeBtn.getBoundingClientRect();
+          const x = rect.left + rect.width / 2;
+          const y = rect.top + rect.height / 2;
+          document.documentElement.style.setProperty('--theme-reveal-x', `${x}px`);
+          document.documentElement.style.setProperty('--theme-reveal-y', `${y}px`);
+          themeAnimating = true;
+          const finish = () => { themeAnimating = false; };
+          if (document.startViewTransition) {
+            document.startViewTransition(() => applyTheme(next)).finished.then(finish).catch(finish);
+          } else {
+            applyTheme(next);
+            finish();
+          }
+        });
+
         const fab = document.getElementById('search-fab');
         const modal = document.getElementById('search-modal');
         const backdrop = document.getElementById('search-backdrop');

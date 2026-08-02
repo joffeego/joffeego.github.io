@@ -26,6 +26,42 @@
     'Liberation Mono', monospace;
 }
 
+/* 浅色主题(显式指定,覆盖系统深色偏好) */
+:root[data-theme='light'] {
+  --bg: #f0efeb;
+  --paper: #ffffff;
+  --bg-soft: #f7f7f7;
+  --text: #555555;
+  --heading: #222222;
+  --muted: #999999;
+  --line: #e8e6e1;
+  --line-strong: #d5d5d5;
+  --accent: #b3412a;
+  --code-bg: #f7f7f7;
+  --shadow: rgba(20, 20, 20, 0.08);
+  --paper-shadow:
+    0 1px 3px rgba(30, 25, 20, 0.05),
+    0 16px 40px -12px rgba(30, 25, 20, 0.12);
+}
+
+/* 深色主题 */
+:root[data-theme='dark'] {
+  --bg: #131314;
+  --paper: #1e1e20;
+  --bg-soft: #262628;
+  --text: #a8a8ab;
+  --heading: #e2e2e4;
+  --muted: #6f6f73;
+  --line: #2d2d31;
+  --line-strong: #4a4a50;
+  --accent: #d97a5f;
+  --code-bg: #262628;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --paper-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 16px 40px -12px rgba(0, 0, 0, 0.55);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #131314;
@@ -216,15 +252,110 @@ a {
   color: var(--heading);
 }
 
+/* 主题切换按钮 */
+
+.theme-toggle {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.5rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font);
+  box-shadow: 0 1px 4px var(--shadow);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: rotate(12deg);
+}
+
+.theme-icon {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+/* 图标表示"点击后将要切换到的主题":浅色主题显示月亮,深色主题显示太阳 */
+html:not([data-theme='dark']) .theme-toggle .icon-moon {
+  display: block;
+}
+html:not([data-theme='dark']) .theme-toggle .icon-sun {
+  display: none;
+}
+html[data-theme='dark'] .theme-toggle .icon-sun {
+  display: block;
+}
+html[data-theme='dark'] .theme-toggle .icon-moon {
+  display: none;
+}
+
+/* 主题切换动画:新主题快照从按钮位置圆形展开(内容全程可见) */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  clip-path: circle(150vmax at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  animation: theme-view-out 0.35s ease forwards;
+}
+
+::view-transition-new(root) {
+  clip-path: circle(0px at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  animation: theme-view-in 0.45s ease forwards;
+}
+
+@keyframes theme-view-out {
+  from {
+    clip-path: circle(150vmax at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+  to {
+    clip-path: circle(0px at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+}
+
+@keyframes theme-view-in {
+  from {
+    clip-path: circle(0px at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--theme-reveal-x, 50%) var(--theme-reveal-y, 50%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 /* ---------- 布局 ---------- */
 
 .layout {
-  max-width: 1200px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: 1rem 2rem 3rem;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 3rem;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 2rem;
   align-items: start;
 }
 
@@ -364,6 +495,7 @@ a {
 .toc-float .toc-list {
   max-height: calc(100vh - 10rem);
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding-right: 0.5rem;
 }
 
@@ -405,6 +537,11 @@ a {
 }
 
 /* ---------- 文章卡片（首页摘要流） ---------- */
+
+.post-stream {
+  max-width: 780px;
+  margin: 0 auto;
+}
 
 .post-stream .post-card {
   padding: 1.5rem 2rem;
@@ -678,6 +815,8 @@ a {
 
 .post-body {
   overflow-wrap: break-word;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 .post-body h2,
@@ -821,12 +960,11 @@ pre:hover .code-copy-btn {
   border-color: #22c55e;
 }
 
-@media (prefers-color-scheme: dark) {
-  .astro-code,
-  .astro-code span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-  }
+/* 深色主题下的代码高亮(显式主题时不再依赖系统偏好) */
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
 }
 
 /* ---------- 表格 ---------- */
@@ -1132,6 +1270,14 @@ tr:hover td {
   border-radius: 3px;
 }
 
+.search-wrapper .pagefind-ui__result-thumb {
+  margin-top: 0;
+}
+
+.search-wrapper .pagefind-ui__result-inner {
+  margin-top: 0;
+}
+
 .search-wrapper .pagefind-ui__message {
   color: var(--muted);
   font-size: 0.9rem;
@@ -1141,6 +1287,13 @@ tr:hover td {
 .search-wrapper .pagefind-ui__drawer {
   border: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.search-wrapper .pagefind-ui__results-area {
+  margin-top: 0;
 }
 
 .search-wrapper .pagefind-ui__search-input {
@@ -1213,19 +1366,18 @@ tr:hover td {
 .search-fab {
   position: fixed;
   top: 1.25rem;
-  right: 1.5rem;
+  right: calc(1.5rem + 2.5rem);
   z-index: 100;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.75rem;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--paper);
   color: var(--muted);
   cursor: pointer;
-  font-family: var(--font);
-  font-size: 0.82rem;
   box-shadow: 0 1px 4px var(--shadow);
   transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1234,23 +1386,6 @@ tr:hover td {
   border-color: var(--line-strong);
   color: var(--text);
   box-shadow: 0 2px 8px var(--shadow);
-}
-
-.search-fab-label {
-  pointer-events: none;
-}
-
-.search-kbd {
-  display: inline-block;
-  padding: 0.1em 0.35em;
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  background: var(--bg-soft);
-  font-family: var(--font);
-  font-size: 0.72em;
-  color: var(--muted);
-  line-height: 1;
-  pointer-events: none;
 }
 
 /* 弹窗 */
@@ -1287,7 +1422,7 @@ tr:hover td {
   z-index: 1;
   width: 92%;
   max-width: 520px;
-  max-height: 420px;
+  max-height: min(420px, 70vh);
   background: var(--paper);
   border-radius: 14px;
   box-shadow:
@@ -1335,6 +1470,7 @@ tr:hover td {
 #search-container {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1352,24 +1488,24 @@ tr:hover td {
   --pagefind-ui-image-border-radius: 4px;
   --pagefind-ui-image-box-ratio: 3 / 2;
   --pagefind-ui-font: var(--font);
-  height: 100%;
+  min-height: 0;
+  max-height: 100%;
   display: flex !important;
   flex-direction: column !important;
 }
 
-/* 搜索表单 — 固定在顶部 */
+/* 搜索表单 — 纵向:输入框在顶部,结果区在下方;高度随结果自适应,上限由弹窗 max-height 控制 */
 
 #search-container .pagefind-ui__form {
   position: relative !important;
   display: flex !important;
-  align-items: center !important;
-  gap: 0.5rem !important;
-  padding: 0.75rem 1rem !important;
-  padding-right: 3.5rem !important;
-  border-bottom: 1px solid var(--line) !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  padding: 0 !important;
   background: var(--bg-soft) !important;
-  flex-shrink: 0 !important;
   margin-top: 0 !important;
+  min-height: 0 !important;
 }
 
 /* 隐藏 Pagefind 默认搜索图标 */
@@ -1379,7 +1515,8 @@ tr:hover td {
 
 #search-container .pagefind-ui__search-input {
   width: 100% !important;
-  padding: 0 !important;
+  padding: 0.75rem 1rem !important;
+  padding-right: 3.5rem !important;
   border: none !important;
   background: transparent !important;
   color: var(--heading) !important;
@@ -1389,6 +1526,7 @@ tr:hover td {
   outline: none !important;
   box-shadow: none !important;
   height: auto !important;
+  flex-shrink: 0 !important;
   appearance: none !important;
   -webkit-appearance: none !important;
 }
@@ -1410,8 +1548,12 @@ tr:hover td {
   flex-direction: column !important;
   flex: 1 !important;
   min-height: 0 !important;
+  min-width: 0 !important;
   gap: 0 !important;
   flex-wrap: nowrap !important;
+  background: var(--paper) !important;
+  border-top: 1px solid var(--line) !important;
+  overflow: hidden !important;
 }
 
 /* 结果区域 — 可滚动 */
@@ -1438,7 +1580,7 @@ tr:hover td {
 }
 
 #search-container .pagefind-ui__results {
-  padding: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
 }
 
 #search-container .pagefind-ui__result {
@@ -1446,17 +1588,17 @@ tr:hover td {
   align-items: flex-start !important;
   gap: 0.75rem !important;
   padding: 0.65rem 0.75rem !important;
-  border: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
+  border: 1px solid var(--line) !important;
   border-radius: 8px !important;
-  margin-bottom: 0.25rem !important;
-  transition: background-color 0.15s ease !important;
+  background: var(--paper) !important;
+  margin-bottom: 0.4rem !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
 }
 
 #search-container .pagefind-ui__result:hover {
   background: var(--bg-soft) !important;
-  box-shadow: none !important;
+  border-color: var(--line-strong) !important;
+  box-shadow: 0 2px 8px var(--shadow) !important;
 }
 
 /* 有图片 */
@@ -1467,6 +1609,7 @@ tr:hover td {
   height: 36px !important;
   border-radius: 6px !important;
   overflow: hidden !important;
+  margin-top: 0 !important;
 }
 
 #search-container .pagefind-ui__result-thumb img {
@@ -1482,9 +1625,10 @@ tr:hover td {
   gap: 0 !important;
 }
 
-#search-container .pagefind-ui__result:not(:has(.pagefind-ui__result-thumb)) .pagefind-ui__result-inner {
-  margin-left: 0 !important;
+/* 有图/无图统一:清掉 Pagefind 默认的 10px 上移,保证所有结果顶部对齐 */
+#search-container .pagefind-ui__result-inner {
   margin-top: 0 !important;
+  min-width: 0 !important;
 }
 
 /* 标题 */
@@ -1522,14 +1666,54 @@ tr:hover td {
   padding: 0 !important;
 }
 
+/* 子结果(nested) */
+
+#search-container .pagefind-ui__result-nested {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.2rem !important;
+  padding: 0.25rem 0 0 0.75rem !important;
+  margin-top: 0.15rem !important;
+  border-left: 2px solid var(--line) !important;
+}
+
+#search-container .pagefind-ui__result-nested .pagefind-ui__result-title {
+  font-size: 0.78rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}
+
+#search-container .pagefind-ui__result-nested .pagefind-ui__result-link {
+  color: var(--muted) !important;
+  border-bottom: 1px solid transparent !important;
+  transition: color 0.15s ease, border-color 0.15s ease !important;
+}
+
+#search-container .pagefind-ui__result-nested .pagefind-ui__result-link:hover {
+  color: var(--accent) !important;
+  border-bottom-color: var(--accent) !important;
+}
+
+#search-container .pagefind-ui__result-nested .pagefind-ui__result-excerpt {
+  font-size: 0.72rem !important;
+  margin-top: 0.1rem !important;
+}
+
+/* 隐藏 Pagefind 默认子结果箭头,用左侧引导线代替 */
+#search-container .pagefind-ui__result-nested .pagefind-ui__result-link::before {
+  content: none !important;
+}
+
 /* 消息 */
 
 #search-container .pagefind-ui__message {
   font-size: 0.82rem !important;
   color: var(--muted) !important;
-  padding: 2rem 0 !important;
-  text-align: center !important;
+  padding: 0.6rem 0 0.2rem 1rem !important;
+  text-align: left !important;
   font-weight: 400 !important;
+  height: auto !important;
 }
 
 /* 加载 */
@@ -1543,12 +1727,12 @@ tr:hover td {
     top: auto;
     bottom: 1.25rem;
     right: 1.25rem;
-    padding: 0.35rem 0.65rem;
-    font-size: 0.8rem;
   }
 
-  .search-kbd {
-    display: none;
+  /* 主题按钮移到右上角,不与右下角的搜索按钮挤在一起 */
+  .theme-toggle {
+    top: 1.25rem;
+    right: 1.25rem;
   }
 
   .back-to-top {

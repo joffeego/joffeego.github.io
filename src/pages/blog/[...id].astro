@@ -144,37 +144,55 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
     if (headings.length === 0) return;
 
-    // 阻止 TOC 上的滚轮事件冒泡到页面
-    tocList.addEventListener('wheel', (e) => {
-      e.stopPropagation();
-    }, { passive: true });
+    // 文章页目录常驻显示,进入即可点击
+    toc.classList.add('show');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          links.forEach(l => l.classList.remove('active'));
-          const match = headings.find(h => h.el === entry.target);
-          if (match) {
-            match.link.classList.add('active');
-            // 滚动 TOC 到可见位置
-            const linkRect = match.link.getBoundingClientRect();
-            const listRect = tocList.getBoundingClientRect();
-            if (linkRect.top < listRect.top || linkRect.bottom > listRect.bottom) {
-              match.link.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            }
-          }
-        }
+    // TOC 列表滚动:滚动只作用于目录列表本身,绝不带动文章页面
+    tocList.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY;
+      const max = tocList.scrollHeight - tocList.clientHeight;
+      tocList.scrollTop = Math.min(Math.max(tocList.scrollTop + delta, 0), max);
+    }, { passive: false });
+
+    // 点击目录项时:立即高亮目标,并暂停自动高亮/列表滚动(等锚点滚动结束),
+    // 避免跳转过程中高亮闪变、列表被程序滚动而丢失用户手动滚动的位置
+    let suppressAuto = false;
+    let suppressTimer = null;
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        suppressAuto = true;
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        clearTimeout(suppressTimer);
+        suppressTimer = setTimeout(() => { suppressAuto = false; }, 1500);
       });
+    });
+
+    const observer = new IntersectionObserver(() => {
+      if (suppressAuto) return;
+      // 高亮视口内最靠上的标题(0 ~ 30% 处),排除已滚出视口上方的标题,
+      // 避免点击跳转后上一节标题仍留在条带内导致高亮错位
+      let best = null;
+      let bestTop = Infinity;
+      for (const h of headings) {
+        const top = h.el.getBoundingClientRect().top;
+        if (top >= 0 && top < window.innerHeight * 0.3 && top < bestTop) {
+          bestTop = top;
+          best = h;
+        }
+      }
+      if (!best) return;
+      links.forEach(l => l.classList.remove('active'));
+      best.link.classList.add('active');
+      // 手动滚动 TOC 列表让高亮项可见(不用 scrollIntoView,避免连带滚动文档)
+      const linkRect = best.link.getBoundingClientRect();
+      const listRect = tocList.getBoundingClientRect();
+      if (linkRect.top < listRect.top || linkRect.bottom > listRect.bottom) {
+        tocList.scrollTop += linkRect.top - listRect.top - (listRect.height - linkRect.height) / 2;
+      }
     }, { rootMargin: '-80px 0px -70% 0px' });
 
     headings.forEach(h => observer.observe(h.el));
-
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 400) {
-        toc.classList.add('show');
-      } else {
-        toc.classList.remove('show');
-      }
-    }, { passive: true });
   });
 </script>
