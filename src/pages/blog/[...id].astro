@@ -266,6 +266,28 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       });
     }
 
+    // 目录跟随滚动:初始与文章头对齐,滚动时即时上移,到底后吸在顶部(模拟 sticky,与滚动完全同步)
+    const baseTocTop = Math.round(toc.getBoundingClientRect().top);
+    let lastTocTop = null;
+    const pinToc = () => {
+      const top = Math.max(32, baseTocTop - window.scrollY);
+      if (top !== lastTocTop) {
+        toc.style.top = top + 'px';
+        lastTocTop = top;
+      }
+    };
+    let pinTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!pinTicking) {
+        pinTicking = true;
+        requestAnimationFrame(() => {
+          pinToc();
+          pinTicking = false;
+        });
+      }
+    }, { passive: true });
+    pinToc();
+
     // 封面图滚动视差:图片以 0.25 倍容器高度滞后于页面滚动(只动 transform;低端机不启用)
     const cover = document.querySelector('.post-cover');
     if (cover && !document.documentElement.classList.contains('low-end')) {

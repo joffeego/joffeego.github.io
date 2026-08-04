@@ -51,12 +51,8 @@ const nav = [
     <meta name="robots" content="index, follow" />
     <link rel="alternate" type="application/rss+xml" title="JoffeeGo's Blog" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" media="print" onload="this.media='all'" />
-    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" media="print" onload="this.media='all'" />
-    <noscript>
-      <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" />
-      <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" />
-    </noscript>
+    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Regular/result.css" />
+    <link rel="stylesheet" href="/fonts/maple-mono/MapleMono-CN-Bold/result.css" />
     <title>{pageTitle}</title>
     <script is:inline>
       // 主题初始化:优先读取用户选择,否则跟随系统(提前执行避免闪烁)
@@ -208,25 +204,36 @@ const nav = [
         const backToTop = document.getElementById('back-to-top');
         let loaded = false;
 
+        function initPagefind() {
+          if (loaded) return;
+          loaded = true;
+          const pfLink = document.createElement('link');
+          pfLink.rel = 'stylesheet';
+          pfLink.href = '/pagefind/pagefind-ui.css';
+          document.head.appendChild(pfLink);
+          const pfScript = document.createElement('script');
+          pfScript.src = '/pagefind/pagefind-ui.js';
+          pfScript.onload = () => {
+            new PagefindUI({ element: container, showSubResults: true });
+            if (modal.classList.contains('open')) {
+              setTimeout(() => container.querySelector('input')?.focus(), 100);
+            }
+          };
+          document.body.appendChild(pfScript);
+        }
+
         function openSearch() {
           modal.classList.add('open');
-          if (!loaded) {
-            loaded = true;
-            // 懒加载 Pagefind 资源(首次打开弹窗才加载)
-            const pfLink = document.createElement('link');
-            pfLink.rel = 'stylesheet';
-            pfLink.href = '/pagefind/pagefind-ui.css';
-            document.head.appendChild(pfLink);
-            const pfScript = document.createElement('script');
-            pfScript.src = '/pagefind/pagefind-ui.js';
-            pfScript.onload = () => {
-              new PagefindUI({ element: container, showSubResults: true });
-              setTimeout(() => container.querySelector('input')?.focus(), 100);
-            };
-            document.body.appendChild(pfScript);
-          } else {
-            setTimeout(() => container.querySelector('input')?.focus(), 100);
-          }
+          if (!loaded) initPagefind();
+          else setTimeout(() => container.querySelector('input')?.focus(), 100);
+        }
+
+        // 空闲时预加载 Pagefind 并初始化,首次打开弹窗时无需等待下载/解析
+        const idleInit = () => initPagefind();
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(idleInit, { timeout: 3000 });
+        } else {
+          window.setTimeout(idleInit, 3000);
         }
 
         function closeSearch() {

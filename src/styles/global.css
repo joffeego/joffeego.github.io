@@ -183,12 +183,10 @@ a {
   from {
     opacity: 0;
     transform: translateY(12px);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -207,7 +205,6 @@ html.low-end .toc-mobile {
 html.low-end .reveal {
   opacity: 1;
   transform: none;
-  filter: none;
   transition: none;
 }
 
@@ -221,17 +218,14 @@ html.low-end .post-stream .post-card {
 .reveal {
   opacity: 0;
   transform: translateY(16px);
-  filter: blur(6px);
   transition:
     opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal.in {
   opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
 }
 
 /* ---------- 顶部阅读进度条 ---------- */
@@ -264,7 +258,6 @@ html.low-end .post-stream .post-card {
   .reveal {
     opacity: 1;
     transform: none;
-    filter: none;
     transition: none;
   }
 }
@@ -420,12 +413,12 @@ html[data-theme='dark'] .theme-toggle .icon-moon {
 /* ---------- 布局 ---------- */
 
 .layout {
-  max-width: 1080px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 1rem 2rem 3rem;
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  gap: 2rem;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 1rem;
   align-items: start;
 }
 
@@ -539,8 +532,8 @@ html[data-theme='dark'] .theme-toggle .icon-moon {
 
 .toc-float {
   position: fixed;
-  top: 6rem;
-  right: max(1rem, calc((100vw - 1200px) / 2 - 240px));
+  top: 10.5rem;
+  right: max(1rem, calc((100vw - 1000px) / 2 - 192px));
   width: 200px;
   background: var(--glass-bg-strong);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -575,8 +568,15 @@ html.js-scrolling .toc-float {
   backdrop-filter: none;
 }
 
+/* 视口不够宽时隐藏悬浮目录,避免覆盖内容右侧 */
+@media (max-width: 1350px) {
+  .toc-float {
+    display: none;
+  }
+}
+
 .toc-float .toc-list {
-  max-height: calc(100vh - 12rem);
+  max-height: calc(100vh - 16rem);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -1653,8 +1653,6 @@ tr:hover td {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
-  -webkit-backdrop-filter: var(--glass-blur-soft);
-  backdrop-filter: var(--glass-blur-soft);
 }
 
 /* ---------- 回到顶部 ---------- */
