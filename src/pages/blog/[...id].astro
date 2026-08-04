@@ -207,7 +207,10 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       });
     });
 
-    const observer = new IntersectionObserver(() => {
+    // 高亮更新用 rAF 节流:滚动时 IO 频繁触发,但每帧最多重算一次,避免强制同步布局拖慢滚动
+    let highlightQueued = false;
+    const updateHighlight = () => {
+      highlightQueued = false;
       if (suppressAuto) return;
       // 高亮视口内最靠上的标题(0 ~ 30% 处),排除已滚出视口上方的标题,
       // 避免点击跳转后上一节标题仍留在条带内导致高亮错位
@@ -228,6 +231,12 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       const listRect = tocList.getBoundingClientRect();
       if (linkRect.top < listRect.top || linkRect.bottom > listRect.bottom) {
         tocList.scrollTop += linkRect.top - listRect.top - (listRect.height - linkRect.height) / 2;
+      }
+    };
+    const observer = new IntersectionObserver(() => {
+      if (!highlightQueued) {
+        highlightQueued = true;
+        requestAnimationFrame(updateHighlight);
       }
     }, { rootMargin: '-80px 0px -70% 0px' });
 
@@ -257,9 +266,9 @@ const toc = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       });
     }
 
-    // 封面图滚动视差:图片以 0.25 倍容器高度滞后于页面滚动(只动 transform)
+    // 封面图滚动视差:图片以 0.25 倍容器高度滞后于页面滚动(只动 transform;低端机不启用)
     const cover = document.querySelector('.post-cover');
-    if (cover) {
+    if (cover && !document.documentElement.classList.contains('low-end')) {
       const coverImg = cover.querySelector('img');
       let ticking = false;
       const updateParallax = () => {

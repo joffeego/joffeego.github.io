@@ -76,6 +76,12 @@ const nav = [
           tc.name = 'theme-color';
           tc.content = t === 'dark' ? '#131314' : '#f0efeb';
           document.head.appendChild(tc);
+          // 低端机检测:CPU 逻辑核数 < 4 或内存 < 4GB → 自动降级重效果
+          var cores = navigator.hardwareConcurrency || 0;
+          var mem = navigator.deviceMemory || 0;
+          if ((cores && cores < 4) || (mem && mem < 4)) {
+            document.documentElement.classList.add('low-end');
+          }
         } catch (e) {}
       })();
     </script>
@@ -174,14 +180,19 @@ const nav = [
         themeBtn.addEventListener('click', () => {
           if (themeAnimating) return;
           const next = getTheme() === 'dark' ? 'light' : 'dark';
+          const lowEnd = document.documentElement.classList.contains('low-end');
           const rect = themeBtn.getBoundingClientRect();
           const x = rect.left + rect.width / 2;
           const y = rect.top + rect.height / 2;
           document.documentElement.style.setProperty('--theme-reveal-x', `${x}px`);
           document.documentElement.style.setProperty('--theme-reveal-y', `${y}px`);
           themeAnimating = true;
-          const finish = () => { themeAnimating = false; };
-          if (document.startViewTransition) {
+          const finish = () => {
+            themeAnimating = false;
+            if (window.__themeParticles) window.__themeParticles.resume();
+          };
+          if (window.__themeParticles) window.__themeParticles.pause();
+          if (document.startViewTransition && !lowEnd) {
             document.startViewTransition(() => applyTheme(next)).finished.then(finish).catch(finish);
           } else {
             applyTheme(next);
@@ -339,10 +350,10 @@ const nav = [
           }, 200);
         }, { passive: true });
 
-        // 背景粒子:漂浮 + 相邻连线 + 鼠标吸附(轻量 canvas,颜色跟随主题)
+        // 背景粒子:漂浮 + 相邻连线 + 鼠标吸附(轻量 canvas,颜色跟随主题;低端机不启用)
         const particleCanvas = document.getElementById('particles-bg');
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-        if (particleCanvas && !reducedMotion.matches) {
+        if (particleCanvas && !reducedMotion.matches && !document.documentElement.classList.contains('low-end')) {
           const pctx = particleCanvas.getContext('2d');
           let particles = [];
           let mouse = { x: -9999, y: -9999 };
@@ -486,6 +497,22 @@ const nav = [
               }
             }, 200);
           }, { passive: true });
+
+          // 供主题切换动画期间暂停/恢复粒子,避免抢 GPU 导致动画卡顿
+          window.__themeParticles = {
+            pause: () => {
+              if (running) {
+                running = false;
+                cancelAnimationFrame(raf);
+              }
+            },
+            resume: () => {
+              if (!running && !reducedMotion.matches) {
+                running = true;
+                stepParticles();
+              }
+            },
+          };
 
           resizeParticles();
           stepParticles();
